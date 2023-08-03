@@ -1,0 +1,2 @@
+2023/08/02 23:49:50 [alert] 16710#16710: lua_code_cache is off; this will hurt performance in /home/crybaby/github/AquaScape/nginx.conf.compiled:20
+2023/08/03 00:06:26 [alert] 17419#17419: lua_code_cache is off; this will hurt performance in /home/crybaby/github/AquaScape/nginx.conf.compiled:20
