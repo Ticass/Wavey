@@ -22,6 +22,8 @@
 					<header id="header">
 						<h1>AquaScape</h1>
 						<p>Bring&nbsp;&bull;&nbsp; back &nbsp;&bull;&nbsp; old social media</p>
+						<div id="count"><%= firstCounter.count %></div>
+						<button id="incrementer">increment number</button>
 						<nav>
 							<ul>
 								<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
@@ -44,6 +46,16 @@
 			window.onload = function() { document.body.classList.remove('is-preload'); }
 			window.ontouchmove = function() { return false; }
 			window.onorientationchange = function() { document.body.scrollTop = 0; }
+
+			document.querySelector('#incrementer').addEventListener('click', () => {
+    fetch('/increment')
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            document.querySelector('#count').textContent = data.count;
+        })
+        .catch((error) => console.error('Error:', error));
+});
 		</script>
 	</body>
 </html>
