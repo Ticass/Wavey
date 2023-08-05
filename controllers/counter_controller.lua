@@ -1,5 +1,4 @@
 local Counter = require("models.counter")
-local lapis = require("lapis")
 
 local CounterController = {}
 
