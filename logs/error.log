@@ -1,2 +1,9 @@
 2023/08/02 23:49:50 [alert] 16710#16710: lua_code_cache is off; this will hurt performance in /home/crybaby/github/AquaScape/nginx.conf.compiled:20
 2023/08/03 00:06:26 [alert] 17419#17419: lua_code_cache is off; this will hurt performance in /home/crybaby/github/AquaScape/nginx.conf.compiled:20
+2023/08/03 12:37:30 [alert] 9549#9549: lua_code_cache is off; this will hurt performance in /home/crybaby/github/AquaScape/nginx.conf.compiled:20
+2023/08/03 12:39:19 [alert] 9612#9612: lua_code_cache is off; this will hurt performance in /home/crybaby/github/AquaScape/nginx.conf.compiled:20
+2023/08/03 12:40:00 [alert] 9647#9647: lua_code_cache is off; this will hurt performance in /home/crybaby/github/AquaScape/nginx.conf.compiled:20
+2023/08/03 12:55:46 [alert] 9809#9809: lua_code_cache is off; this will hurt performance in /home/crybaby/github/AquaScape/nginx.conf.compiled:20
+2023/08/03 12:58:05 [alert] 9913#9913: lua_code_cache is off; this will hurt performance in /home/crybaby/github/AquaScape/nginx.conf.compiled:20
+2023/08/03 13:01:48 [alert] 10088#10088: lua_code_cache is off; this will hurt performance in /home/crybaby/github/AquaScape/nginx.conf.compiled:20
+2023/08/04 23:28:44 [alert] 2375#2375: lua_code_cache is off; this will hurt performance in /home/crybaby/github/AquaScape/nginx.conf.compiled:20
