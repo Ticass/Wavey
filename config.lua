@@ -4,7 +4,7 @@ config("development", {
   server = "nginx",
   code_cache = "off",
   num_workers = "1",
-  static = "/public",
+  static = "/static",
 
 
   -- Db setup

@@ -17,6 +17,12 @@ else
 end
 end
 
+app:before_filter(function(self)
+  -- Set the allowed origin to your React app's domain
+  self.res.headers["Access-Control-Allow-Origin"] = "http://localhost:3000" -- Replace with your React app's domain or *
+  self.res.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Requested-With"
+  self.res.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+end)
 
 
 
@@ -43,5 +49,6 @@ end)
 app:get("/increment", CounterController.increment) -- Connect the /increment route to the increment action
 app:post("/register", UserController.Register)
 app:post("/login", UserController.Login)
+app:get("/getCount", CounterController.getCount)
 
 return app

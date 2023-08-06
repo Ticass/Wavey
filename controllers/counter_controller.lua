@@ -12,4 +12,13 @@ function CounterController:increment()
     return { json = { count = counter and counter.count or "Counter not found" } }
 end
 
+function CounterController:getCount()
+    local params = self.params
+    local id = params.id
+    local counter = Counter:find(id)
+    if counter == nil then return end
+
+    return {json = {count = counter.count} }
+end
+
 return CounterController
