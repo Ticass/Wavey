@@ -17,7 +17,7 @@ function UserController:Register()
         password = User:encrypt_password(plain_password)
     })
 
-    return "User Created " .. " Name " .. first_name .. " Email: " .. email
+    return {json = {text = "User Created " .. " Name " .. first_name .. " Email: " .. email}}
 end
 
 function UserController:Login( )
@@ -27,9 +27,9 @@ function UserController:Login( )
     local user_valid = User:verify_user(email, plain_password)
 
     if user_valid then
-        return { redirect_to = "/" }
+      return {json = {text = "User logged in " .. " email " .. email}}
       else
-        return "Not working wrong password"
+        return {json = {text = "Not working wrong password"}}
       end
 end
 
