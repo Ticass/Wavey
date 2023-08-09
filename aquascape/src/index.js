@@ -5,12 +5,26 @@ import HomePage from './pages/home';
 import RegisterPage from './pages/Register';
 import Login from './pages/Login';
 import reportWebVitals from './reportWebVitals';
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
 
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/">
+      <Route path="home" element={<HomePage />} />
+      <Route path="register" element={<RegisterPage />} />
+      <Route path="login" element={<Login />} />
+    </Route>
+  )
+);
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RegisterPage />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 
