@@ -8,7 +8,6 @@ const Login = () => {
 
         fetch(`/login?&email=${email}&password=${password}`, {
           method: 'POST',
-          mode: 'no-cors',
           headers: {
             'Content-Type': 'application/json',
           },

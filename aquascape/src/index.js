@@ -5,6 +5,7 @@ import HomePage from './pages/home';
 import RegisterPage from './pages/Register';
 import Login from './pages/Login';
 import reportWebVitals from './reportWebVitals';
+import Feed from './pages/homefeed/feed'
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
       <Route path="home" element={<HomePage />} />
       <Route path="register" element={<RegisterPage />} />
       <Route path="login" element={<Login />} />
+      <Route path="waves" element={<Feed />} />
     </Route>
   )
 );

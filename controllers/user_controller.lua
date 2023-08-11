@@ -33,4 +33,11 @@ function UserController:Login( )
       end
 end
 
+function UserController:GetUser()
+  local params = self.params
+  local user_id = params.id
+  local user = User:find(user_id)
+  return {json = {user = user}}
+end
+
 return UserController
