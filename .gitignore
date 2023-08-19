@@ -73,6 +73,10 @@ yarn-error.log*
 /out
 
 startAqua.sh
+*.log
+*.logs
+/logs
 logs/access.log
 logs/error.log
 logs/nginx.pid
+

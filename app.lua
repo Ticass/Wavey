@@ -3,9 +3,9 @@ local lapis = require("lapis")
 local app = lapis.Application()
 app:enable("etlua")
 app.layout = require "views.header"
-local Counter = require("models.counter")
 local CounterController = require("controllers.counter_controller")
 local UserController = require("controllers.user_controller")
+local WaveController = require("controllers.wave_controller")
 local db = require("lapis.db")
 
 local function isConnectedToDB()
@@ -17,38 +17,20 @@ else
 end
 end
 
-app:before_filter(function(self)
-  -- Set the allowed origin to your React app's domain
-  self.res.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
-  self.res.headers["Access-Control-Allow-Headers"] = "Content-Type, Origin, Accept"
-  self.res.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-end)
-
-
-
 app:get("/", function(self)
   isConnectedToDB()
-  if not Counter:find(1) then
-    Counter:create({
-      count = 12,
-    })
-  end
-  local firstCounter = Counter:find(1)
-  self.firstCounter = firstCounter
   return { render = "index" }
 end)
 
-app:get("/signup", function(self)
-  return { render = "register"}
-end)
 
-app:get("/login", function(self)
-  return { render = "login"}
-end)
 
+app:get("/getUser", UserController.GetUser)
 app:get("/increment", CounterController.increment) -- Connect the /increment route to the increment action
 app:post("/register", UserController.Register)
 app:post("/login", UserController.Login)
 app:get("/getCount", CounterController.getCount)
-
+app:get("/waves", WaveController.GetAllWaves)
+app:post("/wave", WaveController.CreateWave)
+app:get("/current", UserController.GetCurrentUser)
+app:get('/profilePicture', UserController.GetProfilePictureUrl)
 return app

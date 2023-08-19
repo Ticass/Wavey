@@ -1,16 +1,19 @@
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom/client';
 import './assets/main.css'
 import HomePage from './pages/home';
 import RegisterPage from './pages/Register';
 import Login from './pages/Login';
 import reportWebVitals from './reportWebVitals';
+import Feed from './pages/homefeed/feed'
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
   RouterProvider,
 } from "react-router-dom";
+import UserProvider from './contexts/user/UserProvider';
+import { ChakraProvider } from '@chakra-ui/react'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,13 +21,18 @@ const router = createBrowserRouter(
       <Route path="home" element={<HomePage />} />
       <Route path="register" element={<RegisterPage />} />
       <Route path="login" element={<Login />} />
+      <Route path="waves" element={<Feed />} />
     </Route>
   )
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ChakraProvider>
+    <UserProvider>
+      <RouterProvider router={router} />
+    </UserProvider>
+    </ChakraProvider>
   </React.StrictMode>
 );
 
