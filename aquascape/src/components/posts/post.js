@@ -24,11 +24,26 @@ const styles = {
     },
     name: {
         fontWeight: 'bold',
+        color: '#14171a'
     },
     content: {
         marginTop: '10px',
         color: '#14171a',
         lineHeight: '1.4'
+    },
+    actions: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginTop: '15px',
+        color: '#657786',
+    },
+    action: {
+        display: 'flex',
+        alignItems: 'center',
+        cursor: 'pointer',
+    },
+    icon: {
+        marginRight: '5px'
     }
 };
 
@@ -38,9 +53,23 @@ const Post = ({ first_name, content }) => {
         <div style={styles.container}>
             <div style={styles.header}>
                 <div style={styles.avatar}></div>
-                <div style={styles.name}>{first_name}</div>
+                <div style={styles.name}>@{first_name}</div>
             </div>
             <div style={styles.content}>{content}</div>
+            <div style={styles.actions}>
+                <div style={styles.action}>
+                    <span style={styles.icon}>💬</span>
+                    <span>123</span>
+                </div>
+                <div style={styles.action}>
+                    <span style={styles.icon}>🔁</span>
+                    <span>456</span>
+                </div>
+                <div style={styles.action}>
+                    <span style={styles.icon}>❤️</span>
+                    <span>789</span>
+                </div>
+            </div>
         </div>
     );
 }

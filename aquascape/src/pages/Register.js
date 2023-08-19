@@ -23,7 +23,7 @@ const RegisterPage = () => {
     e.preventDefault();
 
 
-    axios.post(`http://localhost:8080/register?first_name=${first_name}&last_name=${last_name}&email=${email}&password=${password}`,  {headers: {'Content-Type': 'application/json'} })
+    axios.post(`http://localhost:8080/register?first_name=${first_name}&last_name=${last_name}&email=${email}&password=${password}`,)
     .then(function (response) {
       console.log(response);
     })

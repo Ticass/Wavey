@@ -1,16 +1,18 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
+import UserContext from '../contexts/user/UserContext'
 
 const Login = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const onSubmit = () => {
+    const {user, getCurrentUser} = useContext(UserContext);
 
 
-        fetch(`/login?&email=${email}&password=${password}`, {
+    const onSubmit = (e) => {
+      e.preventDefault()
+
+        fetch(`http://localhost:8080/login?&email=${email}&password=${password}`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          credentials: 'include'
         })
           .then(response => response.json())
           .then(responseData => {
@@ -42,7 +44,7 @@ const Login = () => {
 <body>
   <div class="container">
     <h2>Login</h2>
-    <form id="login-form" onSubmit={onSubmit}>
+    <form id="login-form">
       <div class="form-group">
         <label for="email">Email:</label>
         <input type="email" id="email" onChange={onChange} name="email" required></input>
@@ -52,7 +54,7 @@ const Login = () => {
         <input type="password" id="password" name="password" onChange={onChange} required></input>
       </div>
       <div class="form-group">
-        <button id="submit" type="submit">Login</button>
+        <button id="submit" onClick={(e) => onSubmit(e)} type="submit">Login</button>
       </div>
     </form>
   </div>
