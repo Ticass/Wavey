@@ -32,4 +32,5 @@ app:get("/getCount", CounterController.getCount)
 app:get("/waves", WaveController.GetAllWaves)
 app:post("/wave", WaveController.CreateWave)
 app:get("/current", UserController.GetCurrentUser)
+app:get('/profilePicture', UserController.GetProfilePictureUrl)
 return app
