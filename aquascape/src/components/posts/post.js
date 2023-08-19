@@ -29,12 +29,13 @@ const Post = ({ first_name, content, contentPhoto, profilePicture }) => {
            {content}
           </Text>
         </CardBody>
-        <Image
-          objectFit='cover'
-          src={contentPhoto}
-          alt='Chakra UI'
-        />
-
+        {contentPhoto && (
+             <Image
+             objectFit='cover'
+             src={contentPhoto}
+             alt='Chakra UI'
+           />
+        )}
         <CardFooter
           justify='space-between'
           flexWrap='wrap'

@@ -9,7 +9,7 @@ function WaveController:CreateWave()
     local first_name = user.first_name
     local last_name = user.last_name
     local content = params.content
-    local photo = params.photo
+    local photo = params.content_photo
 
     if (first_name and content) then
         local wave = Wave:create({

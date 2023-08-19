@@ -1,39 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
+import { Box, Heading, Spinner, VStack, SimpleGrid } from "@chakra-ui/react";
 import Post from "../../components/posts/post";
 import axios from "axios";
-import './feed.css'
 import NewPost from "../../components/posts/NewPost";
 import UserContext from "../../contexts/user/UserContext";
-
-const styles = {
-    feedContainer: {
-        maxWidth: '600px', // typical Twitter feed width
-        margin: '0 auto',
-        padding: '20px',
-        backgroundColor: '#f5f8fa', // light blue background typical of Twitter
-        minHeight: '100vh',
-    },
-    header: {
-        fontSize: '24px',
-        fontWeight: 'bold',
-        marginBottom: '20px',
-        color: '#14171a'
-    },
-    loader: {
-        textAlign: 'center',
-        marginTop: '20px'
-    },
-    wavesContainer: {
-        maxHeight: 'calc(100vh - 200px)', // Adjust this value based on the height of NewPost and other components.
-        overflowY: 'auto',
-        paddingTop: '20px'
-    }
-};
 
 const Feed = () => {
     const [waves, setWaves] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const {getProfilePicture} = useContext(UserContext);
+    const { getProfilePicture } = useContext(UserContext);
     const [profilePictures, setProfilePictures] = useState([
         {
             user_id: null,
@@ -43,18 +18,17 @@ const Feed = () => {
 
     const fetchWaves = async () => {
         setIsLoading(true);
-       await axios.get(`http://localhost:8080/waves`, {headers: {'Content-Type': 'application/json'}})
-        .then(response => {
+        try {
+            const response = await axios.get(`http://localhost:8080/waves`, {
+                headers: { 'Content-Type': 'application/json' }
+            });
             setWaves(response.data.waves);
-            setIsLoading(false);
-        })
-        .catch(error => {
+        } catch (error) {
             console.log(error);
+        } finally {
             setIsLoading(false);
-        });
-    }
-
-
+        }
+    };
 
     const getPictureById = (id) => {
         return profilePictures.find(picture => picture.user_id === id);
@@ -62,7 +36,6 @@ const Feed = () => {
 
     useEffect(() => {
         fetchWaves();
-
     }, []);
 
     useEffect(() => {
@@ -74,32 +47,40 @@ const Feed = () => {
                     return { user_id: userId, url: url };
                 })
             );
-
             setProfilePictures(newProfilePictures);
         }
+        setPictures();
+    }, [getProfilePicture, waves]);
 
-        setPictures()
-    }, [getProfilePicture, waves])
-
-    console.log(profilePictures)
     return (
-        <div style={styles.feedContainer}>
-            <div style={styles.header}>Twitter Feed</div>
-            <NewPost fetchWaves={fetchWaves}></NewPost>
-            <div style={styles.wavesContainer}>
+        <Box
+            maxWidth="600px"
+            m="0 auto"
+            p="5"
+            bg="gray.50"
+            minHeight="100vh"
+            overflowY="auto" // This will make the entire container scrollable
+            height="100vh" // This ensures the container takes the full viewport height
+        >
+            <Heading as="h1" size="xl" mb="5" color="gray.800">Latest Posts</Heading>
+            <NewPost fetchWaves={fetchWaves} />
+            <VStack spacing={4} align="stretch" pt="5">
                 {isLoading ? (
-                    <div style={styles.loader}>Loading tweets...</div>
+                    <Spinner size="xl" />
                 ) : (
                     waves.map((wave) => (
-                        <div key={wave.id}>
-                            <Post first_name={wave.first_name} profilePicture={getPictureById(wave.user_id)} content={wave.content} contentPhoto={wave.content_photo} />
-                        </div>
+                        <Post
+                            key={wave.id}
+                            first_name={wave.first_name}
+                            profilePicture={getPictureById(wave.user_id)}
+                            content={wave.content}
+                            contentPhoto={wave.content_photo}
+                        />
                     ))
                 )}
-            </div>
-        </div>
+            </VStack>
+        </Box>
     );
 }
 
 export default Feed;
-
