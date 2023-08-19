@@ -1,76 +1,60 @@
 import React from 'react';
-
-// Styles for the Tweet component
-const styles = {
-    container: {
-        border: '1px solid #e1e8ed',
-        borderRadius: '15px',
-        padding: '10px 15px',
-        maxWidth: '500px',
-        fontFamily: '"Helvetica Neue", Arial, sans-serif',
-        backgroundColor: '#fff',
-        margin: '20px'
-    },
-    header: {
-        display: 'flex',
-        alignItems: 'center',
-    },
-    avatar: {
-        width: '40px',
-        height: '40px',
-        borderRadius: '50%',
-        marginRight: '10px',
-        backgroundColor: '#D3D3D3', // Just a placeholder, you can put an image instead
-    },
-    name: {
-        fontWeight: 'bold',
-        color: '#14171a'
-    },
-    content: {
-        marginTop: '10px',
-        color: '#14171a',
-        lineHeight: '1.4'
-    },
-    actions: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginTop: '15px',
-        color: '#657786',
-    },
-    action: {
-        display: 'flex',
-        alignItems: 'center',
-        cursor: 'pointer',
-    },
-    icon: {
-        marginRight: '5px'
-    }
-};
-
+import { Card, CardHeader, CardBody, CardFooter, Image, Text, Box, Flex, Avatar, Heading, IconButton, Button} from '@chakra-ui/react'
+import {BiLike, BiShare, BiChat } from 'react-icons/bi'
+import {BsThreeDotsVertical} from 'react-icons/bs'
 // Tweet Component
-const Post = ({ first_name, content }) => {
+const Post = ({ first_name, content, contentPhoto, profile_picture }) => {
     return (
-        <div style={styles.container}>
-            <div style={styles.header}>
-                <div style={styles.avatar}></div>
-                <div style={styles.name}>@{first_name}</div>
-            </div>
-            <div style={styles.content}>{content}</div>
-            <div style={styles.actions}>
-                <div style={styles.action}>
-                    <span style={styles.icon}>💬</span>
-                    <span>123</span>
-                </div>
-                <div style={styles.action}>
-                    <span style={styles.icon}>🔁</span>
-                    <span>456</span>
-                </div>
-                <div style={styles.action}>
-                    <span style={styles.icon}>❤️</span>
-                    <span>789</span>
-                </div>
-            </div>
-        </div>
+        <Card maxW='md'>
+        <CardHeader>
+          <Flex spacing='4'>
+            <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
+              <Avatar name='Segun Adebayo' src='https://bit.ly/sage-adebayo' />
+
+              <Box>
+                <Heading size='sm'>{first_name}</Heading>
+                <Text>Creator, Chakra UI</Text>
+              </Box>
+            </Flex>
+            <IconButton
+              variant='ghost'
+              colorScheme='gray'
+              aria-label='See menu'
+              icon={<BsThreeDotsVertical />}
+            />
+          </Flex>
+        </CardHeader>
+        <CardBody>
+          <Text>
+           {content}
+          </Text>
+        </CardBody>
+        <Image
+          objectFit='cover'
+          src='https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
+          alt='Chakra UI'
+        />
+
+        <CardFooter
+          justify='space-between'
+          flexWrap='wrap'
+          sx={{
+            '& > button': {
+              minW: '136px',
+            },
+          }}
+        >
+          <Button flex='1' variant='ghost' leftIcon={<BiLike />}>
+            Like
+          </Button>
+          <Button flex='1' variant='ghost' leftIcon={<BiChat />}>
+            Comment
+          </Button>
+          <Button flex='1' variant='ghost' leftIcon={<BiShare />}>
+            Share
+          </Button>
+        </CardFooter>
+      </Card>
     );
 }
 
