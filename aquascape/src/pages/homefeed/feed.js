@@ -40,9 +40,12 @@ const Feed = () => {
 
     useEffect(() => {
         const setPictures = async () => {
+            // Extract unique user IDs using a Set
+            const uniqueUserIds = [...new Set(waves.map(wave => wave.user_id))];
+
+            // Fetch profile pictures for each unique user ID
             const newProfilePictures = await Promise.all(
-                waves.map(async (wave) => {
-                    const userId = wave.user_id;
+                uniqueUserIds.map(async userId => {
                     const url = await getProfilePicture(userId);
                     return { user_id: userId, url: url };
                 })
@@ -51,6 +54,7 @@ const Feed = () => {
         }
         setPictures();
     }, [getProfilePicture, waves]);
+
 
     return (
         <Box
@@ -62,7 +66,7 @@ const Feed = () => {
             overflowY="auto" // This will make the entire container scrollable
             height="100vh" // This ensures the container takes the full viewport height
         >
-            <Heading as="h1" size="xl" mb="5" color="gray.800">Latest Posts</Heading>
+            <Heading as="h1" size="xl" mb="5" color="gray.800">Latest posts</Heading>
             <NewPost fetchWaves={fetchWaves} />
             <VStack spacing={4} align="stretch" pt="5">
                 {isLoading ? (
