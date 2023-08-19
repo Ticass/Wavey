@@ -17,8 +17,28 @@ const UserProvider = ({ children }) => {
       }
   }
 
+  const getUserById = async (id) => {
+    try {
+      const response = await axios.get('http://localhost:8080/getUser', {params: {id: id}})
+      return response.data.user
+    } catch (error) {
+      console.error("Error fetching current user:", error);
+      return null;
+    }
+  }
+
+  const getProfilePicture = async (userId) => {
+    try {
+      const response = await axios.get('http://localhost:8080/profilePicture', {params: {id: userId}})
+      return response.data.photo
+    } catch (error) {
+      console.error("Error fetching current user:", error);
+      return null;
+    }
+  }
+
     return (
-        <UserContext.Provider value={{ user, getCurrentUser }}>
+        <UserContext.Provider value={{ user, getCurrentUser, getUserById, getProfilePicture }}>
           {children}
         </UserContext.Provider>
       );

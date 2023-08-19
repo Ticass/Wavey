@@ -1,68 +1,103 @@
-import React, {useState, useContext} from 'react'
-import UserContext from '../contexts/user/UserContext'
+'use client'
+import React, {useState} from 'react'
+
+
+import {
+  Flex,
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Checkbox,
+  Stack,
+  Button,
+  Heading,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react'
 
 const Login = () => {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const {user, getCurrentUser} = useContext(UserContext);
 
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
-    const onSubmit = (e) => {
-      e.preventDefault()
+  const onSubmit = (e) => {
+    e.preventDefault()
 
-        fetch(`http://localhost:8080/login?&email=${email}&password=${password}`, {
-          method: 'POST',
-          credentials: 'include'
+      fetch(`http://localhost:8080/login?&email=${email}&password=${password}`, {
+        method: 'POST',
+        credentials: 'include'
+      })
+        .then(response => response.json())
+        .then(responseData => {
+          // Handle the response here, if needed
+          console.log('Response:', responseData);
         })
-          .then(response => response.json())
-          .then(responseData => {
-            // Handle the response here, if needed
-            console.log('Response:', responseData);
-          })
-          .catch(error => {
-            // Handle any errors that occurred during the fetch request
-            console.error('Error:', error);
-          });
-    }
+        .catch(error => {
+          // Handle any errors that occurred during the fetch request
+          console.error('Error:', error);
+        });
+  }
 
-    const categoryHandlers = {
-        email: setEmail,
-        password: setPassword,
-    }
+  const categoryHandlers = {
+      email: setEmail,
+      password: setPassword,
+  }
 
-    const onChange = ({target}) => {
-        categoryHandlers[target.name](target.value)
-    }
+  const onChange = ({target}) => {
+      categoryHandlers[target.name](target.value)
+  }
 
-
-
-    return (
-        <html>
-<head>
-  <title>Login Page</title>
-</head>
-<body>
-  <div class="container">
-    <h2>Login</h2>
-    <form id="login-form">
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" id="email" onChange={onChange} name="email" required></input>
-      </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" onChange={onChange} required></input>
-      </div>
-      <div class="form-group">
-        <button id="submit" onClick={(e) => onSubmit(e)} type="submit">Login</button>
-      </div>
-    </form>
-  </div>
-</body>
-</html>
-    )
+  return (
+    <Flex
+      minH={'100vh'}
+      align={'center'}
+      justify={'center'}
+      bg={useColorModeValue('gray.50', 'gray.800')}>
+      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+        <Stack align={'center'}>
+          <Heading fontSize={'4xl'}>Sign in to your account</Heading>
+          <Text fontSize={'lg'} color={'gray.600'}>
+            to enjoy all of our cool <Text color={'blue.400'}>features</Text> ✌️
+          </Text>
+        </Stack>
+        <Box
+          rounded={'lg'}
+          bg={useColorModeValue('white', 'gray.700')}
+          boxShadow={'lg'}
+          p={8}>
+          <Stack spacing={4}>
+            <FormControl id="email">
+              <FormLabel>Email address</FormLabel>
+              <Input type="email" color={'black'} name="email" onChange={onChange} value={email} />
+            </FormControl>
+            <FormControl id="password">
+              <FormLabel>Password</FormLabel>
+              <Input type="password" color={'black'} value={password} onChange={onChange} name="password" />
+            </FormControl>
+            <Stack spacing={10}>
+              <Stack
+                direction={{ base: 'column', sm: 'row' }}
+                align={'start'}
+                justify={'space-between'}>
+                <Checkbox>Remember me</Checkbox>
+                <Text color={'blue.400'}>Forgot password?</Text>
+              </Stack>
+              <Button
+                onClick={(e) => onSubmit(e)}
+                bg={'blue.400'}
+                color={'white'}
+                _hover={{
+                  bg: 'blue.500',
+                }}>
+                Sign in
+              </Button>
+            </Stack>
+          </Stack>
+        </Box>
+      </Stack>
+    </Flex>
+  )
 }
 
 export default Login;
-
-

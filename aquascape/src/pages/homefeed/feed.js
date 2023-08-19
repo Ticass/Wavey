@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Post from "../../components/posts/post";
 import axios from "axios";
 import './feed.css'
 import NewPost from "../../components/posts/NewPost";
+import UserContext from "../../contexts/user/UserContext";
 
 const styles = {
     feedContainer: {
@@ -32,10 +33,17 @@ const styles = {
 const Feed = () => {
     const [waves, setWaves] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const {getProfilePicture} = useContext(UserContext);
+    const [profilePictures, setProfilePictures] = useState([
+        {
+            user_id: null,
+            url: null,
+        }
+    ]);
 
-    const fetchWaves = () => {
+    const fetchWaves = async () => {
         setIsLoading(true);
-        axios.get(`http://localhost:8080/waves`, {headers: {'Content-Type': 'application/json'}})
+       await axios.get(`http://localhost:8080/waves`, {headers: {'Content-Type': 'application/json'}})
         .then(response => {
             setWaves(response.data.waves);
             setIsLoading(false);
@@ -46,10 +54,34 @@ const Feed = () => {
         });
     }
 
+
+
+    const getPictureById = (id) => {
+        return profilePictures.find(picture => picture.user_id === id);
+    }
+
     useEffect(() => {
         fetchWaves();
+
     }, []);
 
+    useEffect(() => {
+        const setPictures = async () => {
+            const newProfilePictures = await Promise.all(
+                waves.map(async (wave) => {
+                    const userId = wave.user_id;
+                    const url = await getProfilePicture(userId);
+                    return { user_id: userId, url: url };
+                })
+            );
+
+            setProfilePictures(newProfilePictures);
+        }
+
+        setPictures()
+    }, [getProfilePicture, waves])
+
+    console.log(profilePictures)
     return (
         <div style={styles.feedContainer}>
             <div style={styles.header}>Twitter Feed</div>
@@ -60,7 +92,7 @@ const Feed = () => {
                 ) : (
                     waves.map((wave) => (
                         <div key={wave.id}>
-                            <Post first_name={wave.first_name} content={wave.content} />
+                            <Post first_name={wave.first_name} profilePicture={getPictureById(wave.user_id)} content={wave.content} contentPhoto={wave.content_photo} />
                         </div>
                     ))
                 )}
