@@ -1,20 +1,13 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Box, Heading, Spinner, VStack, SimpleGrid } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { Box, Heading, Spinner, VStack} from "@chakra-ui/react";
 import Post from "../../components/posts/post";
 import axios from "axios";
 import NewPost from "../../components/posts/NewPost";
-import UserContext from "../../contexts/user/UserContext";
 
 const Feed = () => {
     const [waves, setWaves] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const { getProfilePicture } = useContext(UserContext);
-    const [profilePictures, setProfilePictures] = useState([
-        {
-            user_id: null,
-            url: null,
-        }
-    ]);
+
 
     const fetchWaves = async () => {
         setIsLoading(true);
@@ -30,30 +23,11 @@ const Feed = () => {
         }
     };
 
-    const getPictureById = (id) => {
-        return profilePictures.find(picture => picture.user_id === id);
-    }
 
     useEffect(() => {
         fetchWaves();
     }, []);
 
-    useEffect(() => {
-        const setPictures = async () => {
-            // Extract unique user IDs using a Set
-            const uniqueUserIds = [...new Set(waves.map(wave => wave.user_id))];
-
-            // Fetch profile pictures for each unique user ID
-            const newProfilePictures = await Promise.all(
-                uniqueUserIds.map(async userId => {
-                    const url = await getProfilePicture(userId);
-                    return { user_id: userId, url: url };
-                })
-            );
-            setProfilePictures(newProfilePictures);
-        }
-        setPictures();
-    }, [getProfilePicture, waves]);
 
 
     return (
@@ -72,13 +46,14 @@ const Feed = () => {
                 {isLoading ? (
                     <Spinner size="xl" />
                 ) : (
-                    waves.map((wave) => (
+                    waves.map((wave, index) => (
                         <Post
-                            key={wave.id}
+                            key={index}
+                            userId={wave.user_id}
                             first_name={wave.first_name}
-                            profilePicture={getPictureById(wave.user_id)}
                             content={wave.content}
                             contentPhoto={wave.content_photo}
+                            waveId={wave.id}
                         />
                     ))
                 )}

@@ -1,5 +1,7 @@
 local Wave = require("models.wave")
 local User = require("models.user")
+local Like = require("models.likes")
+local Comment = require("models.comments")
 local  WaveController = {}
 
 function WaveController:CreateWave()
@@ -26,8 +28,46 @@ function WaveController:CreateWave()
 end
 
 function WaveController:GetAllWaves()
-    local waves = Wave:select()
+    local waves = Wave:select("ORDER BY id DESC")
     return {json = {waves = waves}}
+end
+
+--Takes a wave ID from params and a user ID from the session
+function WaveController:LikeWave()
+    local params = self.params
+    local wave_id = params.wave_id
+    local user_id = self.session.current_user_id
+    if not user_id and not wave_id then return end
+
+    local wave = Wave:find(wave_id)
+    local likes = Like:GetLikesByWaveId(wave_id)
+    -- Number of likes a user has given on a post
+    local postLikedByUser = Like:GetLikesByWaveAndUser(wave_id, user_id)
+    if postLikedByUser > 0 then return {json = {count = likes}} end
+    Like:create({
+        user_id = user_id,
+        wave_id = wave_id,
+    })
+    wave:update({likes = Like:GetLikesByWaveId(wave_id)})
+    return {json = {count = Like:GetLikesByWaveId(wave_id)}}
+end
+
+function WaveController:CommentWave()
+    local params = self.params
+    local wave_id = params.wave_id
+    local user_id = self.session.current_user_id
+    local content = params.content
+
+    if not user_id and not wave_id then return end
+
+    local comment = Comment:create({
+        user_id = user_id,
+        wave_id = wave_id,
+        content = content,
+    })
+
+    return {json = {comment = comment}}
+
 end
 
 return WaveController

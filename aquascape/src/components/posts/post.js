@@ -1,19 +1,56 @@
-import React from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { Card, CardHeader, CardBody, CardFooter, Image, Text, Box, Flex, Avatar, Heading, IconButton, Button} from '@chakra-ui/react'
 import {BiLike, BiShare, BiChat } from 'react-icons/bi'
 import {BsThreeDotsVertical} from 'react-icons/bs'
+import UserContext from '../../contexts/user/UserContext';
+import axios from 'axios';
+import CommentsList from '../comments/commentsList';
 // Tweet Component
-const Post = ({ first_name, content, contentPhoto, profilePicture }) => {
+const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
+
+  const [profilePicture, setProfilePicture] = useState(null)
+  const {getProfilePicture} = useContext(UserContext)
+  const [likes, setLikes] = useState(0)
+  const [displayedLikes, setDisplayedLikes] = useState(likes)
+
+  useEffect(() => {
+    const fetchProfilePicture = () => {
+      getProfilePicture(userId).then((response) => {
+        setProfilePicture(response)
+      })
+    }
+
+    const fetchLikes = () => {
+      axios.get('http://localhost:8080/waves/likes', {params: {wave_id: waveId}}).then((response) => {
+        setLikes(response.data.count)
+      })
+    }
+
+    fetchProfilePicture()
+    fetchLikes()
+  }, [getProfilePicture, userId, waveId])
+
+
+  const onLike = () => {
+    axios.post('http://localhost:8080/wave/like', false, {withCredentials: true, params: {wave_id: waveId}}).then((response) => {
+      setLikes(response.data.count)
+    })
+  }
+
+  useEffect(() => {
+    setDisplayedLikes(likes)
+  }, [likes])
+
+
     return (
         <Card maxW='md'>
         <CardHeader>
           <Flex spacing='4'>
             <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
-              <Avatar name='Segun Adebayo' src={profilePicture?.url} />
-
+              <Avatar name='Segun Adebayo' src={profilePicture} />
               <Box>
-                <Heading size='sm'>{first_name}</Heading>
-                <Text>Creator, Chakra UI</Text>
+                <Heading size='sm'>@{first_name}</Heading>
+                {/* <Text>Creator, Chakra UI</Text> */}
               </Box>
             </Flex>
             <IconButton
@@ -45,8 +82,8 @@ const Post = ({ first_name, content, contentPhoto, profilePicture }) => {
             },
           }}
         >
-          <Button flex='1' variant='ghost' leftIcon={<BiLike />}>
-            Like
+          <Button flex='1' variant='ghost' onClick={onLike} leftIcon={<BiLike />}>
+            Like {displayedLikes}
           </Button>
           <Button flex='1' variant='ghost' leftIcon={<BiChat />}>
             Comment
@@ -54,6 +91,7 @@ const Post = ({ first_name, content, contentPhoto, profilePicture }) => {
           <Button flex='1' variant='ghost' leftIcon={<BiShare />}>
             Share
           </Button>
+          <CommentsList waveId={waveId}></CommentsList>
         </CardFooter>
       </Card>
     );
