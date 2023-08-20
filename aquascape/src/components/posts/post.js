@@ -1,15 +1,32 @@
-import React from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { Card, CardHeader, CardBody, CardFooter, Image, Text, Box, Flex, Avatar, Heading, IconButton, Button} from '@chakra-ui/react'
 import {BiLike, BiShare, BiChat } from 'react-icons/bi'
 import {BsThreeDotsVertical} from 'react-icons/bs'
+import UserContext from '../../contexts/user/UserContext';
 // Tweet Component
-const Post = ({ first_name, content, contentPhoto, profilePicture }) => {
+const Post = ({ first_name, content, contentPhoto, userId}) => {
+
+  const [profilePicture, setProfilePicture] = useState(null)
+  const {getProfilePicture} = useContext(UserContext)
+
+  useEffect(() => {
+    const fetchProfilePicture = () => {
+      const deps = [];
+      if (deps.includes(userId)) return;
+      getProfilePicture(userId).then((response) => {
+        deps.push(userId)
+        setProfilePicture(response)
+      })
+    }
+    fetchProfilePicture()
+  }, [getProfilePicture, userId])
+
     return (
         <Card maxW='md'>
         <CardHeader>
           <Flex spacing='4'>
             <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
-              <Avatar name='Segun Adebayo' src={profilePicture?.url} />
+              <Avatar name='Segun Adebayo' src={profilePicture} />
 
               <Box>
                 <Heading size='sm'>{first_name}</Heading>

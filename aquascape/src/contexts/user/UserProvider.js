@@ -3,8 +3,6 @@ import UserContext from './UserContext'
 import axios from 'axios';
 
 const UserProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-
     const getCurrentUser = async () => {
       try {
           const response = await axios.get('http://localhost:8080/current', {withCredentials: true});
