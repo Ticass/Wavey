@@ -44,6 +44,7 @@ const NewPost = ({fetchWaves}) => {
     axios.post(`http://localhost:8080/wave`, undefined, { withCredentials: true, params: data })
       .then(response => {
         console.log(response);
+        fetchWaves()
       })
       .catch(error => {
         console.error("Error posting wave:", error);

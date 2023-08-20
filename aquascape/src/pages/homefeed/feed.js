@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Box, Heading, Spinner, VStack, SimpleGrid } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { Box, Heading, Spinner, VStack} from "@chakra-ui/react";
 import Post from "../../components/posts/post";
 import axios from "axios";
 import NewPost from "../../components/posts/NewPost";
@@ -46,9 +46,9 @@ const Feed = () => {
                 {isLoading ? (
                     <Spinner size="xl" />
                 ) : (
-                    waves.map((wave) => (
+                    waves.map((wave, index) => (
                         <Post
-                            key={wave.id}
+                            key={index}
                             userId={wave.user_id}
                             first_name={wave.first_name}
                             content={wave.content}

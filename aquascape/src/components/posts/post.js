@@ -37,6 +37,10 @@ const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
     })
   }
 
+  useEffect(() => {
+    setDisplayedLikes(likes)
+  }, [likes])
+
 
     return (
         <Card maxW='md'>
@@ -45,7 +49,7 @@ const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
             <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
               <Avatar name='Segun Adebayo' src={profilePicture} />
               <Box>
-                <Heading size='sm'>{first_name}</Heading>
+                <Heading size='sm'>@{first_name}</Heading>
                 {/* <Text>Creator, Chakra UI</Text> */}
               </Box>
             </Flex>
@@ -79,7 +83,7 @@ const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
           }}
         >
           <Button flex='1' variant='ghost' onClick={onLike} leftIcon={<BiLike />}>
-            Like {likes}
+            Like {displayedLikes}
           </Button>
           <Button flex='1' variant='ghost' leftIcon={<BiChat />}>
             Comment

@@ -28,7 +28,7 @@ function WaveController:CreateWave()
 end
 
 function WaveController:GetAllWaves()
-    local waves = Wave:select()
+    local waves = Wave:select("ORDER BY id DESC")
     return {json = {waves = waves}}
 end
 
@@ -43,13 +43,13 @@ function WaveController:LikeWave()
     local likes = Like:GetLikesByWaveId(wave_id)
     -- Number of likes a user has given on a post
     local postLikedByUser = Like:GetLikesByWaveAndUser(wave_id, user_id)
-    if postLikedByUser >= 1 then return {json = {count = likes}} end
+    if postLikedByUser > 0 then return {json = {count = likes}} end
     Like:create({
         user_id = user_id,
         wave_id = wave_id,
     })
-    wave:update({likes = likes})
-    return {json = {count = likes}}
+    wave:update({likes = Like:GetLikesByWaveId(wave_id)})
+    return {json = {count = Like:GetLikesByWaveId(wave_id)}}
 end
 
 function WaveController:CommentWave()
