@@ -27,7 +27,9 @@ app:post("/register", UserController.Register)
 app:post("/login", UserController.Login)
 app:get("/waves", WaveController.GetAllWaves)
 app:post("/wave", WaveController.CreateWave)
+app:post("/wave/like", WaveController.LikeWave)
 app:get("/current", UserController.GetCurrentUser)
 app:get('/profilePicture', UserController.GetProfilePictureUrl)
 app:get("/waves/likes", LikeController.GetLikesByWaveId)
+
 return app

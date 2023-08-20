@@ -28,10 +28,12 @@ const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
     fetchLikes()
   }, [getProfilePicture, userId, waveId])
 
-    const onLike = () => {
 
-    }
-
+  const onLike = () => {
+    axios.post('http://localhost:8080/wave/like', false, {withCredentials: true, params: {wave_id: waveId}}).then((response) => {
+      setLikes(response.data.count)
+    })
+  }
 
     return (
         <Card maxW='md'>

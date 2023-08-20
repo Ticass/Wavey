@@ -20,8 +20,6 @@ const NewPost = ({fetchWaves}) => {
   const [currentUser, setCurrentUser] = useState(null)
   const maxCharacters = 280;
 
-
-
   useEffect(() => {
     const getUser = async () => {
         const user = await getCurrentUser();

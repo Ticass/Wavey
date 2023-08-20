@@ -40,11 +40,13 @@ function WaveController:LikeWave()
 
     local wave = Wave:find(wave_id)
     local likes = Like:GetLikesByWaveId(wave_id)
+    --TODO: Add validation that the user did not already like
     Like:create({
         user_id = user_id,
         wave_id = wave_id,
     })
     wave:update({likes = likes})
+    return {json = {count = likes}}
 end
 
 return WaveController
