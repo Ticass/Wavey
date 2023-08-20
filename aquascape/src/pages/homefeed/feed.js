@@ -53,6 +53,7 @@ const Feed = () => {
                             first_name={wave.first_name}
                             content={wave.content}
                             contentPhoto={wave.content_photo}
+                            waveId={wave.id}
                         />
                     ))
                 )}

@@ -1,11 +1,9 @@
 -- app.lua
 local lapis = require("lapis")
 local app = lapis.Application()
-app:enable("etlua")
-app.layout = require "views.header"
-local CounterController = require("controllers.counter_controller")
 local UserController = require("controllers.user_controller")
 local WaveController = require("controllers.wave_controller")
+local LikeController = require("controllers.like_controller")
 local db = require("lapis.db")
 
 local function isConnectedToDB()
@@ -25,12 +23,11 @@ end)
 
 
 app:get("/getUser", UserController.GetUser)
-app:get("/increment", CounterController.increment) -- Connect the /increment route to the increment action
 app:post("/register", UserController.Register)
 app:post("/login", UserController.Login)
-app:get("/getCount", CounterController.getCount)
 app:get("/waves", WaveController.GetAllWaves)
 app:post("/wave", WaveController.CreateWave)
 app:get("/current", UserController.GetCurrentUser)
 app:get('/profilePicture', UserController.GetProfilePictureUrl)
+app:get("/waves/likes", LikeController.GetLikesByWaveId)
 return app

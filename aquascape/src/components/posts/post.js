@@ -3,23 +3,35 @@ import { Card, CardHeader, CardBody, CardFooter, Image, Text, Box, Flex, Avatar,
 import {BiLike, BiShare, BiChat } from 'react-icons/bi'
 import {BsThreeDotsVertical} from 'react-icons/bs'
 import UserContext from '../../contexts/user/UserContext';
+import axios from 'axios';
 // Tweet Component
-const Post = ({ first_name, content, contentPhoto, userId}) => {
+const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
 
   const [profilePicture, setProfilePicture] = useState(null)
   const {getProfilePicture} = useContext(UserContext)
+  const [likes, setLikes] = useState(0)
 
   useEffect(() => {
     const fetchProfilePicture = () => {
-      const deps = [];
-      if (deps.includes(userId)) return;
       getProfilePicture(userId).then((response) => {
-        deps.push(userId)
         setProfilePicture(response)
       })
     }
+
+    const fetchLikes = () => {
+      axios.get('http://localhost:8080/waves/likes', {params: {wave_id: waveId}}).then((response) => {
+        setLikes(response.data.count)
+      })
+    }
+
     fetchProfilePicture()
-  }, [getProfilePicture, userId])
+    fetchLikes()
+  }, [getProfilePicture, userId, waveId])
+
+    const onLike = () => {
+
+    }
+
 
     return (
         <Card maxW='md'>
@@ -27,10 +39,9 @@ const Post = ({ first_name, content, contentPhoto, userId}) => {
           <Flex spacing='4'>
             <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
               <Avatar name='Segun Adebayo' src={profilePicture} />
-
               <Box>
                 <Heading size='sm'>{first_name}</Heading>
-                <Text>Creator, Chakra UI</Text>
+                {/* <Text>Creator, Chakra UI</Text> */}
               </Box>
             </Flex>
             <IconButton
@@ -62,8 +73,8 @@ const Post = ({ first_name, content, contentPhoto, userId}) => {
             },
           }}
         >
-          <Button flex='1' variant='ghost' leftIcon={<BiLike />}>
-            Like
+          <Button flex='1' variant='ghost' onClick={onLike} leftIcon={<BiLike />}>
+            Like {likes}
           </Button>
           <Button flex='1' variant='ghost' leftIcon={<BiChat />}>
             Comment
