@@ -1,6 +1,7 @@
 local Wave = require("models.wave")
 local User = require("models.user")
 local Like = require("models.likes")
+local Comment = require("models.comments")
 local  WaveController = {}
 
 function WaveController:CreateWave()
@@ -40,13 +41,33 @@ function WaveController:LikeWave()
 
     local wave = Wave:find(wave_id)
     local likes = Like:GetLikesByWaveId(wave_id)
-    --TODO: Add validation that the user did not already like
+    -- Number of likes a user has given on a post
+    local postLikedByUser = Like:GetLikesByWaveAndUser(wave_id, user_id)
+    if postLikedByUser >= 1 then return {json = {count = likes}} end
     Like:create({
         user_id = user_id,
         wave_id = wave_id,
     })
     wave:update({likes = likes})
     return {json = {count = likes}}
+end
+
+function WaveController:CommentWave()
+    local params = self.params
+    local wave_id = params.wave_id
+    local user_id = self.session.current_user_id
+    local content = params.content
+
+    if not user_id and not wave_id then return end
+
+    local comment = Comment:create({
+        user_id = user_id,
+        wave_id = wave_id,
+        content = content,
+    })
+
+    return {json = {comment = comment}}
+
 end
 
 return WaveController

@@ -4,12 +4,14 @@ import {BiLike, BiShare, BiChat } from 'react-icons/bi'
 import {BsThreeDotsVertical} from 'react-icons/bs'
 import UserContext from '../../contexts/user/UserContext';
 import axios from 'axios';
+import CommentsList from '../comments/commentsList';
 // Tweet Component
 const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
 
   const [profilePicture, setProfilePicture] = useState(null)
   const {getProfilePicture} = useContext(UserContext)
   const [likes, setLikes] = useState(0)
+  const [displayedLikes, setDisplayedLikes] = useState(likes)
 
   useEffect(() => {
     const fetchProfilePicture = () => {
@@ -34,6 +36,7 @@ const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
       setLikes(response.data.count)
     })
   }
+
 
     return (
         <Card maxW='md'>
@@ -84,6 +87,7 @@ const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
           <Button flex='1' variant='ghost' leftIcon={<BiShare />}>
             Share
           </Button>
+          <CommentsList waveId={waveId}></CommentsList>
         </CardFooter>
       </Card>
     );
