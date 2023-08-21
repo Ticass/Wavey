@@ -40,14 +40,24 @@ function WaveController:LikeWave()
     if not user_id and not wave_id then return end
 
     local wave = Wave:find(wave_id)
-    local likes = Like:GetLikesByWaveId(wave_id)
-    -- Number of likes a user has given on a post
-    local postLikedByUser = Like:GetLikesByWaveAndUser(wave_id, user_id)
-    if postLikedByUser > 0 then return {json = {count = likes}} end
-    Like:create({
-        user_id = user_id,
-        wave_id = wave_id,
-    })
+    local activeLikes = Like:GetUserLike(wave_id, user_id, false)
+    local deletedLikes = Like:GetUserLike(wave_id, user_id, true)
+    local liked = activeLikes[1]
+    local unLiked = deletedLikes[1]
+    if liked then
+        Like:RemoveLike(liked.id)
+    end
+    if unLiked then
+        Like:Like(unLiked.id)
+    end
+
+    if not liked and not unLiked then
+        Like:create({
+            user_id = user_id,
+            wave_id = wave_id,
+        })
+    end
+
     wave:update({likes = Like:GetLikesByWaveId(wave_id)})
     return {json = {count = Like:GetLikesByWaveId(wave_id)}}
 end

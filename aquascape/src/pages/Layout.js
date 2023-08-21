@@ -4,14 +4,7 @@ import SidebarWithHeader from "../components/header/header";
 
 const Layout = () => {
     return (
-        <>
-         <SidebarWithHeader>
-         <Feed/>
-         </SidebarWithHeader>
-
-        </>
-
-
+     <Feed/>
     )
 }
 

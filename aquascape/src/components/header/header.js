@@ -34,6 +34,7 @@ import {
 } from 'react-icons/fi'
 import { IconType } from 'react-icons'
 import UserContext from '../../contexts/user/UserContext'
+import { Link } from 'react-router-dom'
 
 
 const LinkItems = [
@@ -161,7 +162,8 @@ const MobileNav = ({ profilePicture, name, onOpen, ...rest }) => {
             <MenuList
               bg={useColorModeValue('white', 'gray.900')}
               borderColor={useColorModeValue('gray.200', 'gray.700')}>
-              <MenuItem>Profile</MenuItem>
+              <Link to="profile"><MenuItem>Profile</MenuItem></Link>
+
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
               <MenuDivider />
