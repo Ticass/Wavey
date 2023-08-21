@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import axios from 'axios';
 import UserContext from '../../contexts/user/UserContext';
+import urls from '../../constants/urls';
 
 const NewPost = ({fetchWaves}) => {
   const { getCurrentUser } = useContext(UserContext);
@@ -41,7 +42,7 @@ const NewPost = ({fetchWaves}) => {
       content_photo: contentPhoto,
     };
 
-    axios.post(`http://localhost:8080/wave`, undefined, { withCredentials: true, params: data })
+    axios.post(`${urls.apiNgrok}/wave`, undefined, { withCredentials: true, params: data })
       .then(response => {
         console.log(response);
         fetchWaves()

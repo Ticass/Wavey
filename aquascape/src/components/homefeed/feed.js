@@ -3,6 +3,7 @@ import { Box, Heading, Spinner, VStack, SimpleGrid} from "@chakra-ui/react";
 import Post from "../posts/post";
 import axios from "axios";
 import NewPost from "../posts/NewPost";
+import urls from "../../constants/urls";
 
 const Feed = () => {
     const [waves, setWaves] = useState([]);
@@ -12,7 +13,7 @@ const Feed = () => {
     const fetchWaves = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8080/waves`, {
+            const response = await axios.get(`${urls.apiNgrok}/waves`, {
                 headers: { 'Content-Type': 'application/json' }
             });
             setWaves(response.data.waves);
