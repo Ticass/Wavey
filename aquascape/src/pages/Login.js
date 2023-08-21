@@ -31,6 +31,14 @@ const Login = () => {
       })
         .then(response => response.json())
         .then(responseData => {
+          if (responseData.contains("error")){
+            alert("Error: Wrong password or email")
+            return;
+          }
+
+          window.location.href = "/waves"
+
+
           // Handle the response here, if needed
           console.log('Response:', responseData);
         })
