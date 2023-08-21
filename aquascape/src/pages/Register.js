@@ -18,6 +18,7 @@ import {
 } from '@chakra-ui/react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import axios from 'axios'
+import urls from '../constants/urls'
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false)
 
@@ -42,7 +43,7 @@ const RegisterPage = () => {
     e.preventDefault();
 
 
-    axios.post(`http://localhost:8080/register?first_name=${first_name}&last_name=${last_name}&email=${email}&password=${password}&profile_picture=${profile_picture}`,)
+    axios.post(`${urls.apiNgrok}/register?first_name=${first_name}&last_name=${last_name}&email=${email}&password=${password}&profile_picture=${profile_picture}`,)
     .then(function (response) {
       console.log(response);
     })

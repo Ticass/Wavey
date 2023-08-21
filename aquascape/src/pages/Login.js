@@ -1,5 +1,6 @@
 'use client'
 import React, {useState} from 'react'
+import urls from '../constants/urls'
 
 
 import {
@@ -24,7 +25,7 @@ const Login = () => {
   const onSubmit = (e) => {
     e.preventDefault()
 
-      fetch(`http://localhost:8080/login?&email=${email}&password=${password}`, {
+      fetch(`${urls.apiNgrok}/login?&email=${email}&password=${password}`, {
         method: 'POST',
         credentials: 'include'
       })
