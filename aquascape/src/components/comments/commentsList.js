@@ -4,6 +4,7 @@ import Comment from "./comment";
 import axios from "axios";
 import UserContext from "../../contexts/user/UserContext";
 import NewComment from "./newComment";
+import urls from "../../constants/urls";
 
 const CommentsList = ({ waveId }) => {
     const [comments, setComments] = useState([]);
@@ -22,7 +23,7 @@ const CommentsList = ({ waveId }) => {
 
     useEffect(() => {
         const fetchComments = (waveId) => {
-            axios.get("http://localhost:8080/waves/comments", { params: { wave_id: parseInt(waveId) } })
+            axios.get(`${urls.apiNgrok}/waves/comments`, { params: { wave_id: parseInt(waveId) } })
                 .then((response) => {
                     setComments(response.data.comments);
                     console.log(response.data.comments)

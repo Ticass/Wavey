@@ -5,6 +5,7 @@ import {BsThreeDotsVertical} from 'react-icons/bs'
 import UserContext from '../../contexts/user/UserContext';
 import axios from 'axios';
 import CommentsList from '../comments/commentsList';
+import urls from '../../constants/urls';
 // Tweet Component
 const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
 
@@ -21,7 +22,7 @@ const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
     }
 
     const fetchLikes = () => {
-      axios.get('http://localhost:8080/waves/likes', {params: {wave_id: waveId}}).then((response) => {
+      axios.get(`${urls.apiNgrok}/waves/likes`, {params: {wave_id: waveId}}).then((response) => {
         setLikes(response.data.count)
       })
     }
@@ -32,7 +33,7 @@ const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
 
 
   const onLike = () => {
-    axios.post('http://localhost:8080/wave/like', false, {withCredentials: true, params: {wave_id: waveId}}).then((response) => {
+    axios.post(`${urls.apiNgrok}/wave/like`, false, {withCredentials: true, params: {wave_id: waveId}}).then((response) => {
       setLikes(response.data.count)
     })
   }

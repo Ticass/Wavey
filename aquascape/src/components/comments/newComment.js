@@ -3,6 +3,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Flex, Avatar, Input } from "@chakra-ui/react";
 import UserContext from "../../contexts/user/UserContext";
 import axios from "axios";
+import urls from "../../constants/urls";
 
 const NewComment = ({ waveId, onCommentAdded }) => {
     const [comment, setComment] = useState('');
@@ -16,7 +17,7 @@ const NewComment = ({ waveId, onCommentAdded }) => {
     }, [getCurrentUser])
 
     const onChange = (content) => {
-        axios.post('http://localhost:8080/wave/comment', false, {withCredentials: true, params: {wave_id: waveId, user_id: currentUser.user_id, content: content }}).then((response) => {
+        axios.post(`${urls.apiNgrok}/wave/comment`, false, {withCredentials: true, params: {wave_id: waveId, user_id: currentUser.user_id, content: content }}).then((response) => {
             if (response.data){
                 onCommentAdded(response.data.comment)
             }
