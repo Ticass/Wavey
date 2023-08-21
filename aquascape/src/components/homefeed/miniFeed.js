@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Heading, Spinner, VStack, SimpleGrid} from "@chakra-ui/react";
+import { Box, Spinner, SimpleGrid} from "@chakra-ui/react";
 import Post from "../posts/post";
 import axios from "axios";
 import urls from "../../constants/urls";
@@ -27,7 +27,7 @@ const MiniFeed = ({userId}) => {
 
 
     return (
-        <Box overflowY="auto"  maxHeight="90vh">
+        <Box overflowY="auto"  maxHeight="70vh">
                 {isLoading ? (
                     <Spinner size="xl" />
                 ) : (
