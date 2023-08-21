@@ -2,16 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Box, Heading, Spinner, VStack, SimpleGrid} from "@chakra-ui/react";
 import Post from "../posts/post";
 import axios from "axios";
-import NewPost from "../posts/NewPost";
 import urls from "../../constants/urls";
 
 const MiniFeed = ({userId}) => {
     const [waves, setWaves] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-
-
-
-
 
     useEffect(() => {
         const fetchWaves = async () => {

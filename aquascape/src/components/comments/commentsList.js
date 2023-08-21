@@ -75,6 +75,14 @@ const CommentsList = ({ waveId }) => {
         return <Text>No comments available for this wave.</Text>;
     }
 
+    const formatDate = (timestamp) => {
+        const [date, time] = timestamp.split(' ');
+        const [hour, minute] = time.split(':');
+        const formattedDate = `${date} ${hour}:${minute}`;
+        return formattedDate
+    }
+
+
     return (
         <VStack align="start" spacing={4} mt={4}>
             <NewComment onCommentAdded={addComment} waveId={waveId}></NewComment>
@@ -84,7 +92,8 @@ const CommentsList = ({ waveId }) => {
                     first_name={findUserInfoByComment(comment).first_name}
                     profile_picture={findUserInfoByComment(comment).profile_picture}
                     content={comment.content}
-                    timestamp={comment.timestamp}
+                    timestamp={formatDate(comment.created_at)}
+                    userId={findUserInfoByComment(comment).id}
                 />
             ))}
         </VStack>

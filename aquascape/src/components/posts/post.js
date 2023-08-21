@@ -6,6 +6,7 @@ import UserContext from '../../contexts/user/UserContext';
 import axios from 'axios';
 import CommentsList from '../comments/commentsList';
 import urls from '../../constants/urls';
+import { Link } from 'react-router-dom';
 // Tweet Component
 const Post = ({ photo, first_name, content, contentPhoto, userId, waveId}) => {
 
@@ -49,9 +50,9 @@ const Post = ({ photo, first_name, content, contentPhoto, userId, waveId}) => {
         <CardHeader>
           <Flex justify="space-between" alignItems="center">
             <Flex alignItems='center' spacing={4}>
-              <Avatar name={first_name} src={profilePicture || photo} />
+             <Avatar name={first_name} src={profilePicture || photo} />
               <Box p={3}>
-                <Heading size='sm'>@{first_name}</Heading>
+              <Link to={`/profile/${userId}`}><Heading size='sm'>@{first_name}</Heading></Link>
               </Box>
             </Flex>
             <IconButton
