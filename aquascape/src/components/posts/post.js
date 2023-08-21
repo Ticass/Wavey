@@ -43,14 +43,14 @@ const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
 
 
     return (
-        <Card maxW='md'>
+      <Box w="full" p={3} borderWidth="1px" borderRadius="md">
+      <Card maxW='600px' m='0 auto'> {/* Ensure card width matches NewPost */}
         <CardHeader>
-          <Flex spacing='4'>
-            <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
-              <Avatar name='Segun Adebayo' src={profilePicture} />
-              <Box>
+          <Flex justify="space-between" alignItems="center">
+            <Flex alignItems='center' spacing={4}>
+              <Avatar name={first_name} src={profilePicture} />
+              <Box p={3}>
                 <Heading size='sm'>@{first_name}</Heading>
-                {/* <Text>Creator, Chakra UI</Text> */}
               </Box>
             </Flex>
             <IconButton
@@ -94,6 +94,7 @@ const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
           <CommentsList waveId={waveId}></CommentsList>
         </CardFooter>
       </Card>
+      </Box>
     );
 }
 

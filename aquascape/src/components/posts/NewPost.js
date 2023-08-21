@@ -62,16 +62,25 @@ const NewPost = ({fetchWaves}) => {
 
   return (
     <Box
-      p={4}
+    bg={useColorModeValue("white", "gray.800")}
+    boxShadow="md"
+    p={4}
+    borderRadius="md"
+    maxW="600px"
+    width="100%"  // Ensure it stretches to the container's width
+    m="0 auto"     // Center the box
+    mt={5}
+  >
+    <Box
+      p={3}  // Consistent padding with Post
       borderWidth="1px"
       borderRadius="md"
       bg={bg}
       borderColor={borderColor}
-      mt={5}
     >
       <HStack spacing={4}>
         <Avatar size="md" bg="gray.500" src={profilePicture} />
-        <VStack align="start" spacing={3} w="full">
+        <VStack align="start" spacing={3} w="full" flexGrow={1}>
           <Textarea
             placeholder="What's on your mind?"
             value={content}
@@ -79,6 +88,8 @@ const NewPost = ({fetchWaves}) => {
             size="sm"
             resize="none"
             color={textColor}
+            flexGrow={1}
+            h="100px"
           />
           <Textarea
             placeholder="Input image URL here"
@@ -87,6 +98,8 @@ const NewPost = ({fetchWaves}) => {
             size="sm"
             resize="none"
             color={textColor}
+            flexGrow={1}
+            h="100px"
           />
           <HStack justify="space-between" w="full">
             <Text fontSize="xs" color="gray.500">
@@ -99,7 +112,9 @@ const NewPost = ({fetchWaves}) => {
         </VStack>
       </HStack>
     </Box>
+    </Box>
   );
 };
+
 
 export default NewPost;

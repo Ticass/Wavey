@@ -7,11 +7,11 @@ function Like:GetLikesByWaveId(wave_id)
 end
 
 function Like:GetLikesByWaveAndUser(wave_id, user_id)
-    return Like:count("wave_id = ?::text AND user_id = ?::text AND deleted = ?", tostring(wave_id), tostring(user_id), false)
+    return Like:count("wave_id = ? AND user_id = ? AND deleted = ?", wave_id, user_id, false)
 end
 
 function Like:GetUserLike(wave_id, user_id)
-    return Like:select("where wave_id = ?::text AND user_id = ?::text AND deleted = ?", tostring(wave_id), tostring(user_id), false)
+    return Like:select("where wave_id = ? AND user_id = ? AND deleted = ?", wave_id, user_id, false)
 end
 
 function Like:RemoveLike(like_id)
