@@ -31,7 +31,7 @@ const Login = () => {
       })
         .then(response => response.json())
         .then(responseData => {
-          if (responseData.contains("error")){
+          if (responseData.text.contains("Not working")){
             alert("Error: Wrong password or email")
             return;
           }
