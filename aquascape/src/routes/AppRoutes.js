@@ -6,10 +6,8 @@ import Login from "../pages/Login";
 import ProfilePage from "../pages/Profile";
 
 import {
-    BrowserRouter as Router,
     Routes,
     Route,
-    Outlet,
   } from "react-router-dom";
 
   const AppRoutes = () => {
@@ -20,7 +18,7 @@ import {
           <Route path="register" element={<RegisterPage />} />
           <Route path="login" element={<Login />} />
           <Route path="waves" element={<Layout />} />
-          <Route path="profile" element={<ProfilePage />} />
+          <Route path="profile/:id" element={<ProfilePage />} />
         </Route>
       </Routes>
     );

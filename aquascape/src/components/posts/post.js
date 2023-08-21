@@ -7,7 +7,7 @@ import axios from 'axios';
 import CommentsList from '../comments/commentsList';
 import urls from '../../constants/urls';
 // Tweet Component
-const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
+const Post = ({ photo, first_name, content, contentPhoto, userId, waveId}) => {
 
   const [profilePicture, setProfilePicture] = useState(null)
   const {getProfilePicture} = useContext(UserContext)
@@ -49,7 +49,7 @@ const Post = ({ first_name, content, contentPhoto, userId, waveId}) => {
         <CardHeader>
           <Flex justify="space-between" alignItems="center">
             <Flex alignItems='center' spacing={4}>
-              <Avatar name={first_name} src={profilePicture} />
+              <Avatar name={first_name} src={profilePicture || photo} />
               <Box p={3}>
                 <Heading size='sm'>@{first_name}</Heading>
               </Box>

@@ -10,22 +10,35 @@ import {
     Tab,
     TabPanel,
     VStack,
-    SimpleGrid
   } from "@chakra-ui/react";
-  import React from "react";
-
-  const Post = ({ content }) => (
-    <Box boxShadow="md" p="6" rounded="md" bg="white">
-      <Text>{content}</Text>
-    </Box>
-  );
+  import React, {useEffect, useState, useContext} from "react";
+  import {useParams} from 'react-router-dom'
+  import UserContext from '../contexts/user/UserContext';
+  import Post from "../components/posts/post";
+import Feed from "../components/homefeed/feed";
+import MiniFeed from "../components/homefeed/miniFeed";
 
   const ProfilePage = () => {
+    const { id } = useParams();
+    const {getUserById} = useContext(UserContext)
+    const [user, setUser] = useState(null)
+    const [userPosts, setUserPosts] = useState(null)
+
+    useEffect(() => {
+        const fetchUser = (id) => {
+            getUserById(id).then((response) => {
+                setUser(response)
+            })
+        }
+        fetchUser(id)
+    }, [id, getUserById])
+
+
     return (
-      <Flex direction="column" maxW="1100px" m="0 auto" p="20px">
+      <Flex direction="column" overflowY='auto' maxW="1100px" m="0 auto" p="20px">
         {/* Cover Photo */}
         <Box width="100%" height="300px" borderRadius="lg" overflow="hidden" mb="4">
-          <Image src="https://stockimages.org/wp-content/uploads/2020/10/bigstock-Photography-Concept-African-A-381364544.jpg" alt="Cover photo" width="100%" />
+          <Image src={user?.profile_picture} alt="Cover photo" width="100%" />
         </Box>
 
         <Flex direction={["column", "row"]}>
@@ -36,14 +49,14 @@ import {
               <Image
                 borderRadius="full"
                 boxSize="150px"
-                src="https://i1.wp.com/blogedify.com/wp-content/uploads/2015/01/royalty-free-images.jpg?resize=1024%2C768"
+                src={user?.profile_picture}
                 alt="Profile picture"
                 border="4px solid white"
               />
             </Box>
 
             <Text fontSize="2xl" fontWeight="bold">
-              John Doe
+              {user?.first_name} {user?.last_name}
             </Text>
             <Text color="gray.500">Lives in City, Country</Text>
             <Button colorScheme="blue" mr="4">
@@ -64,10 +77,10 @@ import {
 
               <TabPanels>
                 <TabPanel>
-                  <Text>Information about John will be displayed here.</Text>
+                  <Text>Information about {user?.first_name} will be displayed here.</Text>
                 </TabPanel>
                 <TabPanel>
-                  <Text>John's friends will be listed here.</Text>
+                  <Text>{user?.first_name}'s friends will be listed here.</Text>
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -76,11 +89,8 @@ import {
             <Box mt="4">
               <Text fontSize="xl" mb="4">Posts</Text>
               <VStack >
-              <Box margin='2' spacing='20' mt='2' mb='2' pb='2'>
-                  {/* Sample Posts */}
-                <Post content="This is a sample post by John." />
-                <Post content="Had a great day at the beach!" />
-                <Post content="Exploring the mountains this weekend. Nature is so refreshing." />
+              <Box overflowY="auto">
+                <MiniFeed userId={user?.id}></MiniFeed>
               </Box>
               </VStack>
             </Box>

@@ -28,8 +28,18 @@ function WaveController:CreateWave()
 end
 
 function WaveController:GetAllWaves()
-    local waves = Wave:select("ORDER BY id DESC")
+    local params = self.params
+    local user_id = params.user_id
+    if user_id then
+        local waves = Wave:select("where user_id = ? order by id desc", user_id)
+        return {json = {waves = waves}}
+    end
+
+    if not user_id then
+        local waves = Wave:select("ORDER BY id DESC")
     return {json = {waves = waves}}
+    end
+
 end
 
 --Takes a wave ID from params and a user ID from the session

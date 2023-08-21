@@ -1,5 +1,4 @@
 import React from "react";
-import Feed from "../components/homefeed/feed";
 import { Outlet } from "react-router-dom";
 import SidebarWithHeader from "../components/header/header";
 

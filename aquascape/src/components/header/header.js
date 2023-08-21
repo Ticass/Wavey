@@ -38,11 +38,11 @@ import { Link } from 'react-router-dom'
 
 
 const LinkItems = [
-  { name: 'Home', icon: FiHome },
-  { name: 'Trending', icon: FiTrendingUp },
-  { name: 'Explore', icon: FiCompass },
-  { name: 'Favourites', icon: FiStar },
-  { name: 'Settings', icon: FiSettings },
+  { name: 'Home', icon: FiHome, path: "/waves" },
+  { name: 'Trending', icon: FiTrendingUp, path: "/" },
+  { name: 'Explore', icon: FiCompass, path: "/"},
+  { name: 'Favourites', icon: FiStar, path: "/" },
+  { name: 'Settings', icon: FiSettings, path: "/" },
 ]
 
 const SidebarContent = ({ onClose, ...rest }) => {
@@ -64,7 +64,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
       </Flex>
       {LinkItems.map((link) => (
         <NavItem key={link.name} icon={link.icon}>
-          {link.name}
+          <Link to={link.path}>{link.name}</Link>
         </NavItem>
       ))}
     </Box>
@@ -106,7 +106,7 @@ const NavItem = ({ icon, children, ...rest }) => {
   )
 }
 
-const MobileNav = ({ profilePicture, name, onOpen, ...rest }) => {
+const MobileNav = ({ currentUser, profilePicture, name, onOpen, ...rest }) => {
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -162,8 +162,7 @@ const MobileNav = ({ profilePicture, name, onOpen, ...rest }) => {
             <MenuList
               bg={useColorModeValue('white', 'gray.900')}
               borderColor={useColorModeValue('gray.200', 'gray.700')}>
-              <Link to="profile"><MenuItem>Profile</MenuItem></Link>
-
+              <Link to={`/profile/${currentUser?.id}`}><MenuItem>Profile</MenuItem></Link>
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
               <MenuDivider />
@@ -206,7 +205,7 @@ const SidebarWithHeader = ({children}) => {
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
-      <MobileNav name={currentUser?.first_name} profilePicture={currentUser?.profile_picture} onOpen={onOpen} />
+      <MobileNav currentUser={currentUser} name={currentUser?.first_name} profilePicture={currentUser?.profile_picture} onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
       </Box>
