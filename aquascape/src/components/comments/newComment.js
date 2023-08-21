@@ -40,6 +40,7 @@ const NewComment = ({ waveId, onCommentAdded }) => {
             border="1px solid #E9EBED"
             borderRadius="12px"
             bg="#F2F3F5"
+            maxW='100%'
         >
             <Avatar size="md" name={currentUser?.first_name} src={currentUser?.profile_picture} mr={3} />
             <Input

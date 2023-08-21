@@ -1,9 +1,0 @@
-body {
-    margin: 0;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    overflow-y: auto;
-}
-
-* {
-    box-sizing: border-box;
-}

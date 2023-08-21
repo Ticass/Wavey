@@ -79,7 +79,7 @@ const CommentsList = ({ waveId }) => {
             <NewComment onCommentAdded={addComment} waveId={waveId}></NewComment>
             {Array.isArray(comments) && comments.map((comment, index) => (
                 <Comment
-                    key={index}
+                    key={comment.id}
                     first_name={findUserInfoByComment(comment).first_name}
                     profile_picture={findUserInfoByComment(comment).profile_picture}
                     content={comment.content}

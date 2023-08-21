@@ -34,6 +34,7 @@ const UserProvider = ({ children }) => {
     }
 }, []);
 
+
     return (
         <UserContext.Provider value={{ getCurrentUser, getUserById, getProfilePicture }}>
           {children}
