@@ -1,5 +1,5 @@
 # AquaScape
 A Facebook clone using [Lapis framework](https://leafo.net/lapis/), React and a PostrgeSQL database
 
-![image](https://github.com/Ticass/AquaScape/assets/11600062/156626a2-5898-49d8-9c58-a53f5e5b05c3)
+[![Image from Gyazo](https://i.gyazo.com/8e2fd2b396ce0ecd76ccf1d773d3e984.gif)](https://gyazo.com/8e2fd2b396ce0ecd76ccf1d773d3e984)
 
