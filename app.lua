@@ -5,6 +5,7 @@ local UserController = require("controllers.user_controller")
 local WaveController = require("controllers.wave_controller")
 local LikeController = require("controllers.like_controller")
 local CommentController = require("controllers.comments_controller")
+local FriendsController = require("controllers.friends_controller")
 local db = require("lapis.db")
 
 local function isConnectedToDB()
@@ -76,6 +77,9 @@ app:get("/waves/likes", LikeController.GetLikesByWaveId)
 app:post("/wave/comment", WaveController.CommentWave)
 app:post("/wave/like", WaveController.LikeWave)
 app:get("/waves/comments", CommentController.ShowByWave)
+app:get("/user/:user_id/friends", FriendsController.DisplayFriends)
+app:post("/user/:user_id/friend/:friend_id/add", FriendsController.AddFriend)
+app:get("/friends/:user_id/:friend_id/status", FriendsController.Status)
 
 
 return app
