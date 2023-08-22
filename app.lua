@@ -79,7 +79,12 @@ app:post("/wave/like", WaveController.LikeWave)
 app:get("/waves/comments", CommentController.ShowByWave)
 app:get("/user/:user_id/friends", FriendsController.DisplayFriends)
 app:post("/user/:user_id/friend/:friend_id/add", FriendsController.AddFriend)
+app:post("/user/:user_id/friend/:friend_id/remove", FriendsController.Unfriend)
 app:get("/friends/:user_id/:friend_id/status", FriendsController.Status)
+app:get('/user/:user_id/friend_requests', FriendsController.GetAllFriendRequestsByUser)
+app:post('/user/:friend_id/request', FriendsController.SendFriendRequest)
+app:post('/request/:request_id/accept', FriendsController.AcceptFriendRequest)
+app:post('/request/:request_id/deny', FriendsController.DenyFriendRequest)
 
 
 return app
