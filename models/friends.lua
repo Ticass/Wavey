@@ -13,9 +13,9 @@ end
 function Friend:IsUnFriended(friend_id, user_id)
     local friend = Friend:find({friend_id = user_id, user_id = friend_id})
     local friend2 = Friend:find({friend_id = friend_id, user_id = user_id})
-    if not friend then return end
+    if not friend and not friend2 then return true end
     if user_id == friend_id then return "same" end
-    if friend.unfriended or friend2.unfriended then return true else return false end
+    if friend.unfriended and friend2.unfriended then return true else return false end
 end
 
 

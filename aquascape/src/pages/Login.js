@@ -31,12 +31,7 @@ const Login = () => {
       })
         .then(response => response.json())
         .then(responseData => {
-          if (responseData.text.contains("Not working")){
-            alert("Error: Wrong password or email")
-            return;
-          }
-          console.log(responseData)
-          return window.location.href = "/waves"
+
         })
         .catch(error => {
           // Handle any errors that occurred during the fetch request

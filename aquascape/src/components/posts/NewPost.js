@@ -35,7 +35,6 @@ const NewPost = ({fetchWaves}) => {
   const textColor = useColorModeValue("black", "white");
 
   const onPost = async (content, contentPhoto) => {
-    console.log(getCurrentUser());
     const data = {
       id: currentUser.id,
       content: content,
@@ -43,8 +42,7 @@ const NewPost = ({fetchWaves}) => {
     };
 
     axios.post(`${urls.apiNgrok}/wave`, undefined, { withCredentials: true, params: data })
-      .then(response => {
-        console.log(response);
+      .then(() => {
         fetchWaves()
       })
       .catch(error => {
