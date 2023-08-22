@@ -35,6 +35,7 @@ import {
 import { IconType } from 'react-icons'
 import UserContext from '../../contexts/user/UserContext'
 import { Link } from 'react-router-dom'
+import FriendRequestNotification from '../notifications/NotificationMenu'
 
 
 const LinkItems = [
@@ -135,7 +136,7 @@ const MobileNav = ({ currentUser, profilePicture, name, onOpen, ...rest }) => {
       </Text>
 
       <HStack spacing={{ base: '0', md: '6' }}>
-        <IconButton size="lg" variant="ghost" aria-label="open menu" icon={<FiBell />} />
+        <FriendRequestNotification currentUser={currentUser}/>
         <Flex alignItems={'center'}>
           <Menu>
             <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>

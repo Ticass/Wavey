@@ -34,6 +34,12 @@ import urls from "../constants/urls";
       })
     }
 
+    const sendFriendRequest = (friend_id) => {
+      axios.post(`${urls.apiNgrok}/user/${friend_id}/request`, false, {withCredentials: true}).then((response) => {
+        console.log(response)
+      })
+    }
+
     const fetchFriendPictures = async () => {
       try {
         // Check if friends is an array and has items before processing
@@ -68,9 +74,6 @@ import urls from "../constants/urls";
       fetchFriends(id)
     }, [getCurrentUser, id])
 
-
-
-
     useEffect(() => {
       const fetchUser = (id) => {
         getUserById(id).then((response) => {
@@ -95,20 +98,22 @@ import urls from "../constants/urls";
       return true
     }
 
+    const unfriend = () => {
+      axios.post(`${urls.apiNgrok}/user/${currentUser.id}/friend/${id}/remove`, false, {withCredentials: true})
+      .then((response) => {
+        console.log(response, 'Friend add')
+      })
+    }
+
     const onFriendAdd = () => {
       userCheck()
-      axios.post(`${urls.apiNgrok}/user/${currentUser?.id}/friend/${id}/add`, false, {withCredentials: true}).then((response) => {
-        console.log(response)
-        fetchFriends(id)
-        fetchFriendPictures().then((response) => setFriendPictures(response));
-      })
-
       if (status === "Add Friend"){
-        setStatus("Unfriend")
+        sendFriendRequest(id)
       } else {
-        setStatus("Add Friend")
+        unfriend()
       }
-
+        fetchFriends(id)
+        fetchFriendPictures();
     }
 
     useEffect(() => {
