@@ -27,16 +27,51 @@ function WaveController:CreateWave()
 
 end
 
+function WaveController:EditWave()
+local params = self.params
+local user_id = self.session.current_user_id
+local wave_id = params.wave_id
+local content = params.content
+
+if not user_id and not wave_id then return end
+
+local wave = Wave:find({id = wave_id, user_id = user_id})
+
+if not wave then return {json = {error = {"no wave found"}}} end
+
+wave:update({content = content})
+end
+
+
+function WaveController:DeleteWave()
+    local params = self.params
+    local user_id = self.session.current_user_id
+    local wave_id = params.wave_id
+
+    if not user_id and not wave_id then return end
+
+    local wave = Wave:find({id = wave_id, user_id = user_id})
+
+    if not wave then return {json = {error = {"no wave found"}}} end
+
+    wave:update({deleted = true})
+end
+
+function WaveController:SurfWave()
+
+end
+
+
 function WaveController:GetAllWaves()
     local params = self.params
     local user_id = params.user_id
     if user_id then
-        local waves = Wave:select("where user_id = ? order by id desc", user_id)
+        local waves = Wave:select("where user_id = ? and deleted = ? order by id desc", user_id, false)
         return {json = {waves = waves}}
     end
 
     if not user_id then
-        local waves = Wave:select("ORDER BY id DESC")
+        local waves = Wave:select("where deleted = ? order by id desc", false)
     return {json = {waves = waves}}
     end
 

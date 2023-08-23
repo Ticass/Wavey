@@ -33,9 +33,7 @@ import urls from "../constants/urls";
     }
 
     const sendFriendRequest = (friend_id) => {
-      axios.post(`${urls.apiNgrok}/user/${friend_id}/request`, false, {withCredentials: true}).then((response) => {
-        console.log(response)
-      })
+      return axios.post(`${urls.apiNgrok}/user/${friend_id}/request`, false, {withCredentials: true})
     }
 
     const findStatus = (friends, friend_id) => {

@@ -14,7 +14,6 @@ const FriendRequestNotification = ({currentUser}) => {
     const fetchFriendRequests = async (id) => {
         try {
             const response = await axios.get(`${urls.apiNgrok}/user/${id}/friend_requests`, { withCredentials: true });
-            console.log(response, "Friend request: API CALL")
             setRequests(response.data.requests);
         } catch (error) {
             console.error("Error fetching friend requests:", error);

@@ -85,6 +85,8 @@ app:get('/user/:user_id/friend_requests', FriendsController.GetAllFriendRequests
 app:post('/user/:friend_id/request', FriendsController.SendFriendRequest)
 app:post('/request/:request_id/accept', FriendsController.AcceptFriendRequest)
 app:post('/request/:request_id/deny', FriendsController.DenyFriendRequest)
+app:post('/wave/delete',  WaveController.DeleteWave)
+app:post('/wave/edit', WaveController.EditWave)
 
 
 return app

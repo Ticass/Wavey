@@ -75,12 +75,12 @@ const CommentsList = ({ waveId }) => {
         return <Text>No comments available for this wave.</Text>;
     }
 
-    const formatDate = (timestamp) => {
-        const [date, time] = timestamp.split(' ');
-        const [hour, minute] = time.split(':');
-        const formattedDate = `${date} ${hour}:${minute}`;
-        return formattedDate
-    }
+    // const formatDate = (timestamp) => {
+    //     const [date, time] = timestamp.split(' ');
+    //     const [hour, minute] = time.split(':');
+    //     const formattedDate = `${date} ${hour}:${minute}`;
+    //     return formattedDate
+    // }
 
 
     return (
@@ -92,7 +92,7 @@ const CommentsList = ({ waveId }) => {
                     first_name={findUserInfoByComment(comment).first_name}
                     profile_picture={findUserInfoByComment(comment).profile_picture}
                     content={comment.content}
-                    timestamp={formatDate(comment.created_at)}
+                    // timestamp={formatDate(comment.created_at)}
                     userId={findUserInfoByComment(comment).id}
                 />
             ))}
