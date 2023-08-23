@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import {
     Box,
     Flex,
@@ -21,17 +22,14 @@ import urls from "../constants/urls";
 
   const ProfilePage = () => {
     const { id } = useParams();
-    const {getUserById, getCurrentUser, getProfilePicture} = useContext(UserContext)
+    const {getUserById, getCurrentUser} = useContext(UserContext)
     const [user, setUser] = useState(null)
     const [currentUser, setCurrentUser] = useState(null)
     const [friends, setFriends] = useState([])
-    const [status, setStatus] = useState('')
-    const [friendPictures, setFriendPictures] = useState([])
+    const [status, setStatus] = useState("Add Friend")
 
     const fetchFriends = (id) => {
-      axios.get(`${urls.apiNgrok}/user/${id}/friends`, {withCredentials: true}).then((response) => {
-        setFriends(response.data.friends)
-      })
+      return axios.get(`${urls.apiNgrok}/user/${id}/friends`, {withCredentials: true})
     }
 
     const sendFriendRequest = (friend_id) => {
@@ -40,57 +38,30 @@ import urls from "../constants/urls";
       })
     }
 
-    const fetchFriendPictures = async () => {
-      try {
-        // Check if friends is an array and has items before processing
-        if (Array.isArray(friends) && friends.length > 0) {
-          const newPictures = await Promise.all(
-            friends.map(async friend => {
-              // Safely fetch each friend's profile picture
-              try {
-                const response = await getProfilePicture(friend.friend_id);
-                return { url: response, userId: friend.friend_id };
-              } catch (error) {
-                console.error(`Error fetching profile picture for user ${friend.friend_id}:`, error);
-                // Return null or a default picture if there's an error fetching a particular profile picture
-                return null;
-              }
-            })
-          );
-
-          // Filter out any null or invalid entries before setting to state
-          const validPictures = newPictures.filter(pic => pic !== null);
-          setFriendPictures(validPictures);
-        }
-      } catch (error) {
-        console.error('Error fetching friend pictures:', error);
-      }
-    };
+    const findStatus = (friends, friend_id) => {
+      if (!Array.isArray(friends)) return;
+      const friend = friends?.find((friend) => friend.user_id == friend_id);
+      if (!friend) return;
+      setStatus(friend?.status)
+  }
 
     useEffect(() => {
       getCurrentUser().then((response) => {
         setCurrentUser(response)
       })
-      fetchFriends(id)
-    }, [getCurrentUser, id])
+      getUserById(id).then((response) => {
+        setUser(response)
+    })
+      fetchFriends(id).then((response) => {
+        setFriends(response.data.friends)
+      })
+    }, [getUserById, getCurrentUser, id])
+
 
     useEffect(() => {
-      const fetchUser = (id) => {
-        getUserById(id).then((response) => {
-            setUser(response)
-        })
-      }
-      fetchUser(id)
-      if (!currentUser) return;
-      const fetchFriendStatus = (friend_id, user_id) => {
-        axios.get(`${urls.apiNgrok}/friends/${user_id}/${friend_id}/status`, {withCredentials: true})
-        .then((response) => {
-          setStatus(response.data.status)
-        })
-      }
-      fetchFriendStatus(id, currentUser.id)
+      findStatus(friends, id)
+    }, [friends, id])
 
-    }, [currentUser, id, getUserById, friends])
 
     const userCheck = () => {
       if (!currentUser) return;
@@ -101,7 +72,7 @@ import urls from "../constants/urls";
     const unfriend = () => {
       axios.post(`${urls.apiNgrok}/user/${currentUser.id}/friend/${id}/remove`, false, {withCredentials: true})
       .then((response) => {
-        console.log(response, 'Friend add')
+        console.log(response, 'Friend removed')
       })
     }
 
@@ -109,24 +80,15 @@ import urls from "../constants/urls";
       userCheck()
       if (status === "Add Friend"){
         sendFriendRequest(id)
-      } else {
-        unfriend()
       }
-        fetchFriends(id)
-        fetchFriendPictures();
+
+      if (status === "Unfriend") {
+        unfriend()
+        setStatus("Add Friend")
+      }
+      fetchFriends(id).then((response) => setFriends(response))
+      findStatus()
     }
-
-    useEffect(() => {
-      if (!friends) return;
-
-      fetchFriendPictures()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [friends])
-
-
-
-
-    console.log(friendPictures, "Friend Pictures")
 
     return (
       <Flex direction="column" overflowY='auto' maxW="1100px" m="0 auto" p="20px">
@@ -179,19 +141,20 @@ import urls from "../constants/urls";
                 </TabPanel>
                 <TabPanel>
                 {
-                  Array.isArray(friendPictures) &&
-                  friendPictures.map((friend, index) => (
+                  Array.isArray(friends) &&
+                  friends.map((friend, index) => (
                     <Link
-                      value={friend.userId}
-                      key={friend.userId} // Using friend.userId for uniqueness
+                      value={friend.user_id}
+                      key={friend.id} // Using friend.userId for uniqueness
                       mr="-4"
                       style={{
                         position: 'relative',
-                        zIndex: friendPictures.length - index,
+                        zIndex: friends.length - index,
                       }}
-                      to={`/profile/${friend.userId}`}
+                      to={`/profile/${friend.friend_id}`}
                     >
-                      <Avatar value={friend.userId} src={friend.url} />
+                      <Avatar key={friend.id} value={friend.friend_id} src={friend.profile_picture} />
+                      <Text size='xs'>{friend.name}</Text>
                     </Link>
                   ))
                 }

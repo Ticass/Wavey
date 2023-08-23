@@ -9,24 +9,7 @@ function FriendController:AddFriend()
     local user_id = self.session.current_user_id
     local friend_id = params.friend_id
 
-    -- Prevent the user from adding himself as a friend
-    if user_id == friend_id then return nil end
-
-    --unfriend the user if it's already friended
-    local existing_friend = Friend:find({friend_id = friend_id, user_id = user_id})
-    local existing_friend2 = Friend:find({friend_id = user_id, user_id = friend_id})
-    if existing_friend and existing_friend2 then
-        if Friend:IsUnFriended(friend_id, user_id) then
-            existing_friend:update({unfriended = false})
-            existing_friend2:update({unfriended = false})
-            return {json = {message = "Re-friended friend"}}
-        end
-        return nil
-    end
-    -- User id is the user who added the person
-    -- Friend ID is the person being added
-    Friend:create({user_id = user_id, friend_id = friend_id})
-    Friend:create({user_id = friend_id, friend_id = user_id})
+    Friend:AddFriend(user_id, friend_id)
 
     return {json = {message = "Friend added with Success"}}
 end
@@ -37,21 +20,7 @@ function FriendController:Unfriend()
     local user_id = self.session.current_user_id
     local friend_id = params.friend_id
 
-    -- Prevent the user from adding himself as a friend
-    if user_id == friend_id then return nil end
-
-    --unfriend the user if it's already friended
-    local existing_friend = Friend:find({friend_id = friend_id, user_id = user_id})
-    local existing_friend2 = Friend:find({friend_id = user_id, user_id = friend_id})
-    if existing_friend and existing_friend2 then
-        if not Friend:IsUnFriended(friend_id, user_id) then
-            existing_friend:update({unfriended = true})
-            existing_friend2:update({unfriended = true})
-            return {json = {message = "unfriended friend"}}
-        end
-
-        return nil
-    end
+    Friend:Unfriend(user_id, friend_id)
 
     return {json = {message = "Friend added with Success"}}
 end
@@ -60,11 +29,22 @@ end
 function FriendController:DisplayFriends()
     local params = self.params
     local user_id = params.user_id
-
-
+    local user = User:find(user_id)
     local friends = Friend:FindAllFriendsByUserId(user_id)
+    if not friends then return end
+    local data = {}
 
-    return {json = {friends = friends}}
+    for _,v in pairs(friends) do
+        local friend = User:find(v.friend_id)
+        local status = nil
+
+        if v.unfriended then status = "Add Friend" end
+        if not v.unfriended then status = "Unfriend" end
+        if not friend then return end
+        table.insert(data, {user_id = user_id, friend_id = v.friend_id, profile_picture = friend.profile_picture, name = friend.first_name, status = status })
+    end
+
+    return {json = {friends = data}}
 end
 
 function FriendController:Status()
@@ -90,7 +70,7 @@ function FriendController:SendFriendRequest()
     if user_id == tonumber(friend_id) then return end
 
     local already_exists = FriendRequest:find({user_id = user_id, friend_id = tonumber(friend_id)})
-    if already_exists then return {json = {message = "Already exists"}} end
+    if already_exists and already_exists.accepted ~= true and already_exists.accepted ~= false then return {json = {message = "Already exists"}} end
 
     local request = FriendRequest:create({
         user_id = user_id,
@@ -109,7 +89,7 @@ function FriendController:GetAllFriendRequestsByUser()
     for _,v in pairs(requests) do
         local profile_picture = User:find(v.user_id).profile_picture
         local user_name = User:find(v.user_id).first_name
-        if v.accepted ~= true or v.accepted ~= false then
+        if v.accepted ~= true and v.accepted ~= false then
             table.insert(request_json, {request = v, profile_picture = profile_picture, user_name = user_name })
         end
     end
@@ -122,10 +102,12 @@ function FriendController:AcceptFriendRequest()
     local user_id = self.session.current_user_id
     local friend_id = params.friend_id
 
-    local request = FriendRequest:find({user_id = user_id, friend_id = friend_id})
+    local request = FriendRequest:find({user_id = friend_id, friend_id = user_id})
     if not request then return end
 
     FriendRequest:AcceptRequest(request.id)
+    return {json = {message = "Accepted Friend Request"}}
+
 end
 
 function FriendController:DenyFriendRequest()
@@ -133,10 +115,11 @@ function FriendController:DenyFriendRequest()
     local user_id = self.session.current_user_id
     local friend_id = params.friend_id
 
-    local request = FriendRequest:find({user_id = user_id, friend_id = friend_id})
+    local request = FriendRequest:find({user_id = friend_id, friend_id = user_id})
     if not request then return end
 
     FriendRequest:DenyRequest(request.id)
+    return {json = {message = "Denied Friend Request"}}
 end
 
 

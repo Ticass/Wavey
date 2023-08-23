@@ -22,15 +22,12 @@ const FriendRequestNotification = ({currentUser}) => {
     };
 
     useEffect(() => {
-            fetchFriendRequests(currentUser);
+            fetchFriendRequests(currentUser?.id);
     }, [currentUser]);
 
-    const acceptRequest = (id, friend_id) => {
+    const acceptRequest = (id) => {
         if (!currentUser) return;
         axios.post(`${urls.apiNgrok}/request/${id}/accept`, false, {withCredentials: true}).then((response) => console.log(response, "Accept response"))
-        axios.post(`${urls.apiNgrok}/user/${currentUser.id}/friend/${friend_id}/add`, false, {withCredentials: true}).then((response) => {
-            console.log(response, 'Friend add')
-          })
     }
 
     const denyRequest = (id) => {
@@ -38,6 +35,7 @@ const FriendRequestNotification = ({currentUser}) => {
         axios.post(`${urls.apiNgrok}/request/${id}/deny`, false, {withCredentials: true}).then((response) => console.log(response, "Denied response"))
     }
 
+    const filteredRequests = Array.isArray(requests) && requests?.filter(request => request.accepted !== true && request.accepted !== false)
 
   const color = useColorModeValue('gray.600', 'gray.300')
 
@@ -50,10 +48,10 @@ const FriendRequestNotification = ({currentUser}) => {
         variant="ghost"
       />
       <MenuList bg={useColorModeValue('white', 'gray.900')} borderColor={useColorModeValue('gray.200', 'gray.700')} p={2}>
-        {requests.length < 1 ? (
+        {filteredRequests?.length < 1 ? (
           <MenuItem px={4} py={3}>No new friend requests</MenuItem>
         ) : (
-          Array.isArray(requests) && requests.map(request => (
+          Array.isArray(filteredRequests) && filteredRequests.map(request => (
             <MenuItem key={request.id} value={request.id} p={4}>
               <HStack width="full" justifyContent="space-between">
                 <HStack>
@@ -64,8 +62,8 @@ const FriendRequestNotification = ({currentUser}) => {
                   </Box>
                 </HStack>
                 <ButtonGroup size="sm" isAttached>
-                  <Button onClick={() => acceptRequest(request.id, request.request.user_id, request.request.friend_id)} leftIcon={<FiUserPlus />} colorScheme="blue">Accept</Button>
-                  <Button leftIcon={<FiX />} onClick={() => denyRequest(request.id, request.request.user_id, request.request.friend_id)} value={request.id} colorScheme="red">Decline</Button>
+                  <Button onClick={() => acceptRequest(request.id, request.friend_id)} leftIcon={<FiUserPlus />} colorScheme="blue">Accept</Button>
+                  <Button leftIcon={<FiX />} onClick={() => denyRequest(request.id)} value={request.id} colorScheme="red">Decline</Button>
                 </ButtonGroup>
               </HStack>
             </MenuItem>

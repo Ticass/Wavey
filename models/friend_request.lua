@@ -1,5 +1,6 @@
 local Model = require("lapis.db.model").Model
 local FriendRequest = Model:extend("friend_requests")
+local Friend = require("models.friends")
 
 --User Id (Int) The user requesting the friend
 -- Friend Id (Int) the user who gets added as a friend
@@ -17,7 +18,10 @@ end
 
 function FriendRequest:AcceptRequest(request_id)
     local request = FriendRequest:find(request_id)
+    local user_id = request.user_id
+    local friend_id = request.friend_id
     if request then
+        Friend:AddFriend(user_id, friend_id)
         return request:update({ accepted = true })
     end
 end
