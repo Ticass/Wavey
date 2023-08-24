@@ -1,5 +1,7 @@
 # Wavey
 (TAKE NOTE THAT THE VERCEL LINK IS NOT WORKING WITHOUT AN ACTIVE BACKEND SERVER, I AM WORKING ON GETTING IT DEPLOYED SOON FOR DEMO PURPOSES)
+<br/>
+<br/>
 A social media platform built using the Lapis framework, Express, and React, with a PostgreSQL database. Connect with friends, share posts, and experience real-time interactions with WebSockets.
 
 [![Wavey Demo](https://i.gyazo.com/8e2fd2b396ce0ecd76ccf1d773d3e984.gif)](https://gyazo.com/8e2fd2b396ce0ecd76ccf1d773d3e984)
