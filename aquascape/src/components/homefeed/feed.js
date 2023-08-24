@@ -4,6 +4,7 @@ import Post from "../posts/post";
 import axios from "axios";
 import NewPost from "../posts/NewPost";
 import urls from "../../constants/urls";
+// import WebSocket from "websocket"; // Import the WebSocket library
 
 const Feed = () => {
     const [waves, setWaves] = useState([]);
@@ -27,6 +28,23 @@ const Feed = () => {
 
     useEffect(() => {
         fetchWaves();
+    }, []);
+
+    useEffect(() => {
+
+        // Set up WebSocket connection
+        const ws = new WebSocket('ws://localhost:3001');
+
+        ws.onmessage = (event) => {
+            const message = event
+            if (message) {
+                fetchWaves();
+            }
+        };
+
+        return () => {
+            ws.close();
+        };
     }, []);
 
 

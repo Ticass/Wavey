@@ -2,6 +2,7 @@ local Wave = require("models.wave")
 local User = require("models.user")
 local Like = require("models.likes")
 local Comment = require("models.comments")
+local Notifier = require("websocket.handler")
 local  WaveController = {}
 
 function WaveController:CreateWave()
@@ -13,7 +14,7 @@ function WaveController:CreateWave()
     local content = params.content
     local photo = params.content_photo
 
-    if (first_name and content) then
+    if first_name and content then
         local wave = Wave:create({
             first_name = first_name,
             last_name = last_name,
@@ -22,9 +23,11 @@ function WaveController:CreateWave()
             content_photo = photo
         })
 
-        return {json = {wave = wave }}
-    end
+        -- Notify WebSocket clients about the new post
+        Notifier.notify("New post has been made")
 
+        return { json = { wave = wave } }
+    end
 end
 
 function WaveController:EditWave()

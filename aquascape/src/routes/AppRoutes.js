@@ -4,11 +4,11 @@ import Layout from "../pages/Layout";
 import RegisterPage from "../pages/Register";
 import Login from "../pages/Login";
 import ProfilePage from "../pages/Profile";
-
 import {
     Routes,
     Route,
   } from "react-router-dom";
+
 
   const AppRoutes = () => {
     return (
