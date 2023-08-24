@@ -3,7 +3,11 @@ import UserContext from './UserContext'
 import axios from 'axios';
 import urls from '../../constants/urls';
 
+
 const UserProvider = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState(null)
+
+
     const getCurrentUser = async () => {
       try {
           const response = await axios.get(`${urls.apiNgrok}/current`, {withCredentials: true});
@@ -14,6 +18,10 @@ const UserProvider = ({ children }) => {
           return null;
       }
   }
+
+  useEffect(() => {
+    getCurrentUser().then((user) => setCurrentUser(user))
+  }, [])
 
   const getUserById = async (id) => {
     try {
@@ -37,7 +45,7 @@ const UserProvider = ({ children }) => {
 
 
     return (
-        <UserContext.Provider value={{ getCurrentUser, getUserById, getProfilePicture }}>
+        <UserContext.Provider value={{currentUser, getCurrentUser, getUserById, getProfilePicture }}>
           {children}
         </UserContext.Provider>
       );

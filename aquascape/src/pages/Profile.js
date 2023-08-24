@@ -22,9 +22,8 @@ import urls from "../constants/urls";
 
   const ProfilePage = () => {
     const { id } = useParams();
-    const {getUserById, getCurrentUser} = useContext(UserContext)
+    const {getUserById, currentUser} = useContext(UserContext)
     const [user, setUser] = useState(null)
-    const [currentUser, setCurrentUser] = useState(null)
     const [friends, setFriends] = useState([])
     const [status, setStatus] = useState("Add Friend")
 
@@ -44,16 +43,13 @@ import urls from "../constants/urls";
   }
 
     useEffect(() => {
-      getCurrentUser().then((response) => {
-        setCurrentUser(response)
-      })
       getUserById(id).then((response) => {
         setUser(response)
     })
       fetchFriends(id).then((response) => {
         setFriends(response.data.friends)
       })
-    }, [getUserById, getCurrentUser, id])
+    }, [getUserById, id])
 
 
     useEffect(() => {

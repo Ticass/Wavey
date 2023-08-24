@@ -30,12 +30,11 @@ import { Link } from "react-router-dom";
 // Tweet Component
 const Post = ({ photo, first_name, content, contentPhoto, userId, waveId }) => {
   const [profilePicture, setProfilePicture] = useState(null);
-  const { getProfilePicture, getCurrentUser } = useContext(UserContext);
+  const { getProfilePicture, currentUser } = useContext(UserContext);
   const [likes, setLikes] = useState(0);
   const [displayedLikes, setDisplayedLikes] = useState(likes);
   const [editMode, setEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
-  const [currentUser, setCurrentUser] = useState({})
 
   useEffect(() => {
     const fetchProfilePicture = () => {
@@ -52,11 +51,9 @@ const Post = ({ photo, first_name, content, contentPhoto, userId, waveId }) => {
         });
     };
 
-    getCurrentUser().then((user) => setCurrentUser(user))
-
     fetchProfilePicture();
     fetchLikes();
-  }, [getProfilePicture, userId, waveId, getCurrentUser]);
+  }, [getProfilePicture, userId, waveId]);
 
   const startEdit = () => {
     if (!currentUser) return;

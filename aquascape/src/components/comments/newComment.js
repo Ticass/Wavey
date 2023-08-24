@@ -7,14 +7,7 @@ import urls from "../../constants/urls";
 
 const NewComment = ({ waveId, onCommentAdded }) => {
     const [comment, setComment] = useState('');
-    const [currentUser, setCurrentUser] = useState(null)
-    const { getCurrentUser } = useContext(UserContext);  // Assuming UserContext provides the current user
-
-    useEffect(() => {
-        getCurrentUser().then((response) => {
-            setCurrentUser(response)
-        })
-    }, [getCurrentUser])
+    const { currentUser } = useContext(UserContext);  // Assuming UserContext provides the current user
 
     const onChange = (content) => {
         axios.post(`${urls.apiNgrok}/wave/comment`, false, {withCredentials: true, params: {wave_id: waveId, user_id: currentUser.user_id, content: content }}).then((response) => {

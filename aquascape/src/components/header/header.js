@@ -174,18 +174,7 @@ const MobileNav = ({ currentUser, profilePicture, name, onOpen, ...rest }) => {
 
 const SidebarWithHeader = ({children}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const {getCurrentUser} = useContext(UserContext)
-  const [currentUser, setCurrentUser] = useState(null)
-
-  useEffect(() => {
-    const fetchUser = () => {
-        getCurrentUser().then((response) => {
-            setCurrentUser(response)
-            console.log(response, "Current User")
-        })
-    }
-    fetchUser()
-  }, [getCurrentUser])
+  const {currentUser} = useContext(UserContext)
 
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>

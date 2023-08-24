@@ -14,21 +14,12 @@ import UserContext from '../../contexts/user/UserContext';
 import urls from '../../constants/urls';
 
 const NewPost = ({fetchWaves}) => {
-  const { getCurrentUser } = useContext(UserContext);
+  const { currentUser } = useContext(UserContext);
   const [content, setContent] = useState('');
   const [contentPhoto, setContentPhoto] = useState('');
-  const [profilePicture, setProfilePicture] = useState('')
-  const [currentUser, setCurrentUser] = useState(null)
   const maxCharacters = 280;
 
-  useEffect(() => {
-    const getUser = async () => {
-        const user = await getCurrentUser();
-        setProfilePicture(user.profile_picture)
-        setCurrentUser(user)
-      }
-    getUser()
-  },[getCurrentUser])
+
 
   const bg = useColorModeValue("white", "gray.700");
   const borderColor = useColorModeValue("gray.200", "gray.600");
@@ -79,7 +70,7 @@ const NewPost = ({fetchWaves}) => {
         borderColor={borderColor}
       >
         <HStack spacing={4}>
-          <Avatar size="md" bg="gray.500" src={profilePicture} />
+          <Avatar size="md" bg="gray.500" src={currentUser?.profile_picture} />
           <VStack align="start" spacing={3} w="full" flexGrow={1}>
             <Textarea
               placeholder="What's on your mind?"
