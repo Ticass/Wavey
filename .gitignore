@@ -80,3 +80,4 @@ logs/access.log
 logs/error.log
 logs/nginx.pid
 
+nginx.conf

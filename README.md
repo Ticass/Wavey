@@ -1,15 +1,38 @@
 # Wavey
-A Facebook clone using [Lapis framework](https://leafo.net/lapis/), React and a PostrgeSQL database
+A social media platform built using the Lapis framework, Express, and React, with a PostgreSQL database. Connect with friends, share posts, and experience real-time interactions with WebSockets.
 
-[![Image from Gyazo](https://i.gyazo.com/8e2fd2b396ce0ecd76ccf1d773d3e984.gif)](https://gyazo.com/8e2fd2b396ce0ecd76ccf1d773d3e984)
+[![Wavey Demo](https://i.gyazo.com/8e2fd2b396ce0ecd76ccf1d773d3e984.gif)](https://gyazo.com/8e2fd2b396ce0ecd76ccf1d773d3e984)
 
-# Current Features
+[![Image from Gyazo](https://i.gyazo.com/78f583099b2d2bede23d4bb1c07d6ebd.gif)](https://gyazo.com/78f583099b2d2bede23d4bb1c07d6ebd)
 
-* Auth
-* Posting
-* Commenting 
-* Liking / Unliking
-* user profiles
-* friend requests
-* friends (No effect on the feed yet)
-  
+## Current Features
+
+- **Authentication**: Securely log in to your Wavey account.
+- **Posting**: Share your thoughts and updates with your friends.
+- **Commenting**: Engage in conversations by commenting on posts.
+- **Comment Replies**: Share your thoughts about a certain comment.
+- **Liking / Unliking**: Show appreciation for posts through likes.
+- **User Profiles**: Customize your profile and let others know about you.
+- **Friend Requests**: Connect with others by sending and accepting friend requests.
+- **Friends**: Build your social circle; upcoming integration with the feed.
+- **Websocket**: Experience real-time communication between the server and clients.
+
+## Implemented Features with WebSockets
+
+| Feature                 | Status   |
+|-------------------------|----------|
+| Posting            | ✅       |
+| Commenting  | ❌       |
+| Likes     | ❌       |
+| Friend requests | ❌       |
+| Comment Reply  | ❌       |
+
+Wavey offers a unique social experience, allowing you to stay connected with friends and experience real-time interactions.
+
+## Contact
+
+For any questions or suggestions, feel free to reach out at [your@email.com](mailto:alexis.grenier2000@gmail.com).
+
+## License
+
+Wavey is released under the [MIT License](LICENSE).
