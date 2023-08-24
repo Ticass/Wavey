@@ -2,7 +2,7 @@ local Wave = require("models.wave")
 local User = require("models.user")
 local Like = require("models.likes")
 local Comment = require("models.comments")
-local Notifier = require("websocket.handler")
+local Notifier = require("notifier")
 local  WaveController = {}
 
 function WaveController:CreateWave()
