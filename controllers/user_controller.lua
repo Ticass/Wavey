@@ -32,6 +32,12 @@ function UserController:Login()
     if user_valid and user then
         self.session.current_user_id = user.id
 
+      -- Serialize and sign session data
+      local session_data = require("lapis.session").encode_session(self.session)
+
+      -- Set the session cookie with the necessary attributes
+      self.res.headers["Set-Cookie"] = "lapis_session=" .. session_data .. "; Path=/; Secure; HttpOnly; SameSite=None"
+
       return {json = {text = "User stored in session: "..self.session.current_user_id}}
       else
         return {json = {text = "Not working wrong password"}}

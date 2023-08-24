@@ -1,5 +1,6 @@
 'use client'
 import React, {useState} from 'react'
+import urls from '../constants/urls'
 
 
 import {
@@ -14,30 +15,53 @@ import {
   Heading,
   Text,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom';
+
+
 
 const Login = () => {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const onSubmit = (e) => {
-    e.preventDefault()
+  const navigate = useNavigate();
+  const toast = useToast();
 
-      fetch(`http://localhost:8080/login?&email=${email}&password=${password}`, {
-        method: 'POST',
-        credentials: 'include'
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    fetch(`${urls.apiNgrok}/login?&email=${email}&password=${password}`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+      .then(response => response.json())
+      .then(responseData => {
+        console.log(responseData, "Data")
+        if (responseData.text.includes('User stored in session')) {
+          navigate('/waves');
+        } else {
+          toast({
+            title: 'Login Error',
+            description: 'Wrong password or email.',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+        }
       })
-        .then(response => response.json())
-        .then(responseData => {
-          // Handle the response here, if needed
-          console.log('Response:', responseData);
-        })
-        .catch(error => {
-          // Handle any errors that occurred during the fetch request
-          console.error('Error:', error);
+      .catch(error => {
+        console.error('Error:', error);
+        toast({
+          title: 'Login Error',
+          description: 'An error occurred. Please try again.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
         });
-  }
+      });
+  };
 
   const categoryHandlers = {
       email: setEmail,

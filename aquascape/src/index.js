@@ -1,37 +1,28 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom/client';
 import './assets/main.css'
-import RegisterPage from './pages/Register';
-import Login from './pages/Login';
 import reportWebVitals from './reportWebVitals';
-import Layout from './pages/Layout';
 import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
+  BrowserRouter,
 } from "react-router-dom";
 import UserProvider from './contexts/user/UserProvider';
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import AppRoutes from './routes/AppRoutes';
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/">
-      <Route path="register" element={<RegisterPage />} />
-      <Route path="login" element={<Login />} />
-      <Route path="waves" element={<Layout />} />
-    </Route>
-  )
-);
+const theme = extendTheme({
+
+})
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ChakraProvider>
+    <BrowserRouter>
+  <ChakraProvider theme={theme}>
     <UserProvider>
-      <RouterProvider router={router} />
+        <AppRoutes />
     </UserProvider>
-    </ChakraProvider>
-  </React.StrictMode>
+  </ChakraProvider>
+  </BrowserRouter>
+</React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

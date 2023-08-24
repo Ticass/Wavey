@@ -7,14 +7,14 @@ import {
     PopoverArrow,
     PopoverBody,
     PopoverCloseButton,
-    Link,
 } from '@chakra-ui/react';
+import { Link } from "react-router-dom";
 
-const UserProfilePopOver = ({ profile_picture, name, description, tags }) => {
+const UserProfilePopOver = ({ userId, profile_picture, name, description, tags }) => {
     return (
         <Popover>
             <PopoverTrigger>
-                <Link fontWeight="bold" color="blue.500">
+                <Link to={`/profile/${userId}`} fontWeight="bold" color="blue.500">
                     {name}
                 </Link>
             </PopoverTrigger>

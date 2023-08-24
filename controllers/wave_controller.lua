@@ -27,9 +27,54 @@ function WaveController:CreateWave()
 
 end
 
+function WaveController:EditWave()
+local params = self.params
+local user_id = self.session.current_user_id
+local wave_id = params.wave_id
+local content = params.content
+
+if not user_id and not wave_id then return end
+
+local wave = Wave:find({id = wave_id, user_id = user_id})
+
+if not wave then return {json = {error = {"no wave found"}}} end
+
+wave:update({content = content})
+end
+
+
+function WaveController:DeleteWave()
+    local params = self.params
+    local user_id = self.session.current_user_id
+    local wave_id = params.wave_id
+
+    if not user_id and not wave_id then return end
+
+    local wave = Wave:find({id = wave_id, user_id = user_id})
+
+    if not wave then return {json = {error = {"no wave found"}}} end
+
+    wave:update({deleted = true})
+end
+
+function WaveController:SurfWave()
+
+end
+
+
 function WaveController:GetAllWaves()
-    local waves = Wave:select("ORDER BY id DESC")
+    local params = self.params
+    local user_id = params.user_id
+    if user_id then
+        local waves = Wave:select("where user_id = ? and deleted = ? order by id desc", user_id, false)
+        return {json = {waves = waves}}
+    end
+
+    if not user_id then
+        local waves = Wave:select("where deleted = ? order by id desc", false)
     return {json = {waves = waves}}
+    end
+
 end
 
 --Takes a wave ID from params and a user ID from the session
@@ -40,14 +85,24 @@ function WaveController:LikeWave()
     if not user_id and not wave_id then return end
 
     local wave = Wave:find(wave_id)
-    local likes = Like:GetLikesByWaveId(wave_id)
-    -- Number of likes a user has given on a post
-    local postLikedByUser = Like:GetLikesByWaveAndUser(wave_id, user_id)
-    if postLikedByUser > 0 then return {json = {count = likes}} end
-    Like:create({
-        user_id = user_id,
-        wave_id = wave_id,
-    })
+    local activeLikes = Like:GetUserLike(wave_id, user_id, false)
+    local deletedLikes = Like:GetUserLike(wave_id, user_id, true)
+    local liked = activeLikes[1]
+    local unLiked = deletedLikes[1]
+    if liked then
+        Like:RemoveLike(liked.id)
+    end
+    if unLiked then
+        Like:Like(unLiked.id)
+    end
+
+    if not liked and not unLiked then
+        Like:create({
+            user_id = user_id,
+            wave_id = wave_id,
+        })
+    end
+
     wave:update({likes = Like:GetLikesByWaveId(wave_id)})
     return {json = {count = Like:GetLikesByWaveId(wave_id)}}
 end

@@ -14,8 +14,6 @@ import {
   Drawer,
   DrawerContent,
   useDisclosure,
-  BoxProps,
-  FlexProps,
   Menu,
   MenuButton,
   MenuDivider,
@@ -29,19 +27,19 @@ import {
   FiStar,
   FiSettings,
   FiMenu,
-  FiBell,
   FiChevronDown,
 } from 'react-icons/fi'
-import { IconType } from 'react-icons'
 import UserContext from '../../contexts/user/UserContext'
+import { Link } from 'react-router-dom'
+import FriendRequestNotification from '../notifications/NotificationMenu'
 
 
 const LinkItems = [
-  { name: 'Home', icon: FiHome },
-  { name: 'Trending', icon: FiTrendingUp },
-  { name: 'Explore', icon: FiCompass },
-  { name: 'Favourites', icon: FiStar },
-  { name: 'Settings', icon: FiSettings },
+  { name: 'Home', icon: FiHome, path: "/waves" },
+  { name: 'Trending', icon: FiTrendingUp, path: "/" },
+  { name: 'Explore', icon: FiCompass, path: "/"},
+  { name: 'Favourites', icon: FiStar, path: "/" },
+  { name: 'Settings', icon: FiSettings, path: "/" },
 ]
 
 const SidebarContent = ({ onClose, ...rest }) => {
@@ -63,7 +61,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
       </Flex>
       {LinkItems.map((link) => (
         <NavItem key={link.name} icon={link.icon}>
-          {link.name}
+          <Link to={link.path}>{link.name}</Link>
         </NavItem>
       ))}
     </Box>
@@ -105,7 +103,7 @@ const NavItem = ({ icon, children, ...rest }) => {
   )
 }
 
-const MobileNav = ({ profilePicture, name, onOpen, ...rest }) => {
+const MobileNav = ({ currentUser, profilePicture, name, onOpen, ...rest }) => {
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -134,7 +132,7 @@ const MobileNav = ({ profilePicture, name, onOpen, ...rest }) => {
       </Text>
 
       <HStack spacing={{ base: '0', md: '6' }}>
-        <IconButton size="lg" variant="ghost" aria-label="open menu" icon={<FiBell />} />
+        <FriendRequestNotification currentUser={currentUser}/>
         <Flex alignItems={'center'}>
           <Menu>
             <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
@@ -161,7 +159,7 @@ const MobileNav = ({ profilePicture, name, onOpen, ...rest }) => {
             <MenuList
               bg={useColorModeValue('white', 'gray.900')}
               borderColor={useColorModeValue('gray.200', 'gray.700')}>
-              <MenuItem>Profile</MenuItem>
+              <Link to={`/profile/${currentUser?.id}`}><MenuItem>Profile</MenuItem></Link>
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
               <MenuDivider />
@@ -176,18 +174,7 @@ const MobileNav = ({ profilePicture, name, onOpen, ...rest }) => {
 
 const SidebarWithHeader = ({children}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const {getCurrentUser} = useContext(UserContext)
-  const [currentUser, setCurrentUser] = useState(null)
-
-  useEffect(() => {
-    const fetchUser = () => {
-        getCurrentUser().then((response) => {
-            setCurrentUser(response)
-            console.log(response, "Current User")
-        })
-    }
-    fetchUser()
-  }, [getCurrentUser])
+  const {currentUser} = useContext(UserContext)
 
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
@@ -204,7 +191,7 @@ const SidebarWithHeader = ({children}) => {
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
-      <MobileNav name={currentUser?.first_name} profilePicture={currentUser?.profile_picture} onOpen={onOpen} />
+      <MobileNav currentUser={currentUser} name={currentUser?.first_name} profilePicture={currentUser?.profile_picture} onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
       </Box>

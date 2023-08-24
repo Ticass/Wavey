@@ -1,11 +1,16 @@
 import React, {useState, useCallback, useEffect} from 'react'
 import UserContext from './UserContext'
 import axios from 'axios';
+import urls from '../../constants/urls';
+
 
 const UserProvider = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState(null)
+
+
     const getCurrentUser = async () => {
       try {
-          const response = await axios.get('http://localhost:8080/current', {withCredentials: true});
+          const response = await axios.get(`${urls.apiNgrok}/current`, {withCredentials: true});
           console.log(response.data.user, "Response");
           return response.data.user;
       } catch (error) {
@@ -14,9 +19,13 @@ const UserProvider = ({ children }) => {
       }
   }
 
+  useEffect(() => {
+    getCurrentUser().then((user) => setCurrentUser(user))
+  }, [])
+
   const getUserById = async (id) => {
     try {
-      const response = await axios.get('http://localhost:8080/getUser', {params: {id: id}})
+      const response = await axios.get(`${urls.apiNgrok}/getUser`, {params: {id: id}})
       return response.data.user
     } catch (error) {
       console.error("Error fetching current user:", error);
@@ -26,7 +35,7 @@ const UserProvider = ({ children }) => {
 
   const getProfilePicture = useCallback(async (userId) => {
     try {
-        const response = await axios.get('http://localhost:8080/profilePicture', {params: {id: userId}})
+        const response = await axios.get(`${urls.apiNgrok}/profilePicture`, {params: {id: userId}})
         return response.data.photo;
     } catch (error) {
         console.error("Error fetching current user:", error);
@@ -36,7 +45,7 @@ const UserProvider = ({ children }) => {
 
 
     return (
-        <UserContext.Provider value={{ getCurrentUser, getUserById, getProfilePicture }}>
+        <UserContext.Provider value={{currentUser, getCurrentUser, getUserById, getProfilePicture }}>
           {children}
         </UserContext.Provider>
       );
