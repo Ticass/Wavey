@@ -6,9 +6,9 @@ import UserProfilePopOver from '../userProfilePopup/userProfilePopOver';
 const Comment = ({ userId, first_name, profile_picture, content, timestamp }) => {
 
   return (
-    <Flex align="start" mt={3}>
+    <Flex align="start" mt={3} w="100%">
       <Avatar size="md" name={first_name} src={profile_picture} mr={3} />
-      <Box bg="gray.100" rounded="md" p={2}>
+      <Box bg="gray.100" w='100%' rounded="md" p={2}>
         <Flex justify="space-between" align="baseline">
 
           <UserProfilePopOver userId={userId} name={first_name} profile_picture={profile_picture}/>

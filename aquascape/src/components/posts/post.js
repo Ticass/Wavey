@@ -17,7 +17,6 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  EditableInput,
   EditableTextarea,
   EditablePreview,
 } from "@chakra-ui/react";

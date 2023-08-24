@@ -19,7 +19,7 @@ const NewComment = ({ waveId, onCommentAdded }) => {
     const onChange = (content) => {
         axios.post(`${urls.apiNgrok}/wave/comment`, false, {withCredentials: true, params: {wave_id: waveId, user_id: currentUser.user_id, content: content }}).then((response) => {
             if (response.data){
-                onCommentAdded(response.data.comment)
+                onCommentAdded(waveId)
             }
         })
     }
@@ -31,9 +31,10 @@ const NewComment = ({ waveId, onCommentAdded }) => {
         setComment('');  // Clear the comment input after submitting
     };
 
-
+    console.log(currentUser, "CURRENT USER NEW COMMENT")
 
     return (
+        currentUser &&
         <Flex
             align="center"
             mt={4}
@@ -41,9 +42,10 @@ const NewComment = ({ waveId, onCommentAdded }) => {
             border="1px solid #E9EBED"
             borderRadius="12px"
             bg="#F2F3F5"
+            w="70%"
             maxW='100%'
         >
-            <Avatar size="md" name={currentUser?.first_name} src={currentUser?.profile_picture} mr={3} />
+            <Avatar size="md" name={currentUser.first_name} src={currentUser.profile_picture} mr={3} />
             <Input
                 w="100%"   // Ensure input takes the full width available
                 bg="transparent"
@@ -58,7 +60,7 @@ const NewComment = ({ waveId, onCommentAdded }) => {
                     bg: 'white',   // Set the background to white when focused for contrast
                 }}
                 _placeholder={{
-                    color: 'gray.500',
+                    color: 'black.500',
                 }}
                 fontSize="sm"
                 borderRadius="10px"   // Subtle rounded corners for the input

@@ -14,8 +14,6 @@ import {
   Drawer,
   DrawerContent,
   useDisclosure,
-  BoxProps,
-  FlexProps,
   Menu,
   MenuButton,
   MenuDivider,
@@ -29,10 +27,8 @@ import {
   FiStar,
   FiSettings,
   FiMenu,
-  FiBell,
   FiChevronDown,
 } from 'react-icons/fi'
-import { IconType } from 'react-icons'
 import UserContext from '../../contexts/user/UserContext'
 import { Link } from 'react-router-dom'
 import FriendRequestNotification from '../notifications/NotificationMenu'

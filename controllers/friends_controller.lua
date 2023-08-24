@@ -29,7 +29,6 @@ end
 function FriendController:DisplayFriends()
     local params = self.params
     local user_id = params.user_id
-    local user = User:find(user_id)
     local friends = Friend:FindAllFriendsByUserId(user_id)
     if not friends then return end
     local data = {}

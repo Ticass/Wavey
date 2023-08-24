@@ -1,12 +1,8 @@
 -- app.lua
 local lapis = require("lapis")
 local app = lapis.Application()
-local UserController = require("controllers.user_controller")
-local WaveController = require("controllers.wave_controller")
-local LikeController = require("controllers.like_controller")
-local CommentController = require("controllers.comments_controller")
-local FriendsController = require("controllers.friends_controller")
 local db = require("lapis.db")
+
 
 local function isConnectedToDB()
   local res = db.query("SELECT NOW() as time")
@@ -62,31 +58,13 @@ local function modify_cookies_for_samesite(self)
   end
 end
 
+
+
 app:before_filter(modify_cookies_for_samesite)
 
 
-app:get("/getUser", UserController.GetUser)
-app:post("/register", UserController.Register)
-app:post("/login", UserController.Login)
-app:get("/current", UserController.GetCurrentUser)
-app:get('/profilePicture', UserController.GetProfilePictureUrl)
--- Waves
-app:get("/waves", WaveController.GetAllWaves)
-app:post("/wave", WaveController.CreateWave)
-app:get("/waves/likes", LikeController.GetLikesByWaveId)
-app:post("/wave/comment", WaveController.CommentWave)
-app:post("/wave/like", WaveController.LikeWave)
-app:get("/waves/comments", CommentController.ShowByWave)
-app:get("/user/:user_id/friends", FriendsController.DisplayFriends)
-app:post("/user/:user_id/friend/:friend_id/add", FriendsController.AddFriend)
-app:post("/user/:user_id/friend/:friend_id/remove", FriendsController.Unfriend)
-app:get("/friends/:user_id/:friend_id/status", FriendsController.Status)
-app:get('/user/:user_id/friend_requests', FriendsController.GetAllFriendRequestsByUser)
-app:post('/user/:friend_id/request', FriendsController.SendFriendRequest)
-app:post('/request/:request_id/accept', FriendsController.AcceptFriendRequest)
-app:post('/request/:request_id/deny', FriendsController.DenyFriendRequest)
-app:post('/wave/delete',  WaveController.DeleteWave)
-app:post('/wave/edit', WaveController.EditWave)
+-- Include the routes
+app:include("routes")
 
 
 return app

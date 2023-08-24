@@ -1,67 +1,35 @@
-import React, { useState, useEffect, useContext } from "react";
-import { VStack, Text } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { VStack, Text, Box } from "@chakra-ui/react";
 import Comment from "./comment";
 import axios from "axios";
-import UserContext from "../../contexts/user/UserContext";
 import NewComment from "./newComment";
 import urls from "../../constants/urls";
-
+import CommentReply from "./commentReply";
+import NewReply from "./newReply";
 const CommentsList = ({ waveId }) => {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [users, setUsers] = useState([{
-        first_name: null,
-        profile_picture: null,
-    }])
-    const {getUserById} = useContext(UserContext)
+    const [reply, setReply] = useState('');
 
-    const addComment = (newComment) => {
-        setComments(prevComments => Array.isArray(prevComments) ? [...prevComments, newComment] : [newComment]);
+    const fetchComments = (waveId) => {
+        axios.get(`${urls.apiNgrok}/waves/comments`, { params: { wave_id: parseInt(waveId) } })
+            .then((response) => {
+                setComments(response.data.comments);
+                console.log(response.data.comments)
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error("Error fetching comments:", err);
+                setError(err);
+                setLoading(false);
+            });
     };
 
 
     useEffect(() => {
-        const fetchComments = (waveId) => {
-            axios.get(`${urls.apiNgrok}/waves/comments`, { params: { wave_id: parseInt(waveId) } })
-                .then((response) => {
-                    setComments(response.data.comments);
-                    console.log(response.data.comments)
-                    setLoading(false);
-                })
-                .catch((err) => {
-                    console.error("Error fetching comments:", err);
-                    setError(err);
-                    setLoading(false);
-                });
-        };
         fetchComments(waveId);
     }, [waveId]);
-
-    useEffect(() => {
-        const fetchCommentUsers = async () => {
-            if (!Array.isArray(comments)) return;
-            let fetchedUsers = [];
-            for (const comment of comments) {
-                const user = await getUserById(comment.user_id);
-                console.log(user, "User")
-                fetchedUsers.push({
-                    id: comment.user_id,
-                    first_name: user.first_name,
-                    profile_picture: user.profile_picture
-                });
-            }
-            setUsers(fetchedUsers);
-        };
-
-        fetchCommentUsers();
-
-    }, [comments, getUserById]);
-
-    const findUserInfoByComment = (comment) => {
-        const user = users.find(u => u.id === comment.user_id);
-        return user || { first_name: 'Unknown', profile_picture: null };
-    }
 
     if (loading) {
         return <Text>Loading comments...</Text>;
@@ -75,29 +43,65 @@ const CommentsList = ({ waveId }) => {
         return <Text>No comments available for this wave.</Text>;
     }
 
-    // const formatDate = (timestamp) => {
-    //     const [date, time] = timestamp.split(' ');
-    //     const [hour, minute] = time.split(':');
-    //     const formattedDate = `${date} ${hour}:${minute}`;
-    //     return formattedDate
-    // }
+    const filteredReplies = () => {
+        if (!comments.length) return;
+
+        return comments?.filter(comment => comment.parent_id)
+    }
+
+    const handleSubmit = (commentId) => {
+        if (reply.trim() === '') return;
+
+        axios.post(`${urls.apiNgrok}/comment/${commentId}/reply`, false, { withCredentials: true, params: { parent_id: commentId, content: reply, wave_id: waveId} })
+            .then((response) => {
+                if (response.data) {
+                    fetchComments(waveId)
+                    console.log("Comment sent")
+                }
+            });
+
+        setReply('');
+    };
 
 
     return (
-        <VStack align="start" spacing={4} mt={4}>
-            <NewComment onCommentAdded={addComment} waveId={waveId}></NewComment>
-            {Array.isArray(comments) && comments.map((comment, index) => (
-                <Comment
-                    key={comment.id}
-                    first_name={findUserInfoByComment(comment).first_name}
-                    profile_picture={findUserInfoByComment(comment).profile_picture}
-                    content={comment.content}
-                    // timestamp={formatDate(comment.created_at)}
-                    userId={findUserInfoByComment(comment).id}
-                />
-            ))}
+        <VStack align="start" w="100%" spacing={4} mt={4}>
+            <NewComment onCommentAdded={fetchComments} waveId={waveId}></NewComment>
+            {Array.isArray(comments) && comments.map((comment) => {
+                if (!comment.parent_id) {  // Only process comments without a parent_id
+                    return (
+                        <Box
+                            key={comment.id}
+                            p={3}
+                            border="1px solid #E9EBED"
+                            borderRadius="8px"
+                            bg="white"
+                            boxShadow="sm"
+                            w="100%"
+                        >
+                            <Comment
+                                first_name={comment.first_name}
+                                profile_picture={comment.profile_picture}
+                                content={comment.content}
+                                userId={comment.id}
+                            />
+                            {Array.isArray(filteredReplies()) && filteredReplies().filter(reply => reply.parent_id === comment.id).map(reply => (
+                                <CommentReply
+                                    commentId={reply.id}
+                                    key={reply.id}
+                                    first_name={reply.first_name}
+                                    profile_picture={reply.profile_picture}
+                                    content={reply.content}
+                                    userId={reply.user_id}
+                                />
+                            ))}
+                            <NewReply commentId={comment.id} waveId={comment.wave_id} fetchComments={fetchComments} setReply={setReply} handleReply={handleSubmit} reply={reply} />
+                        </Box>
+                    );
+                }
+                return null;  // Return null for comments with a parent_id
+            })}
         </VStack>
     );
-};
-
+                    }
 export default CommentsList;
