@@ -34,7 +34,7 @@ Wavey offers a unique social experience, allowing you to stay connected with fri
 
 ## Contact
 
-For any questions or suggestions, feel free to reach out at [your@email.com](mailto:alexis.grenier2000@gmail.com).
+For any questions or suggestions, feel free to reach out at [alexis.grenier2000@gmail.com](mailto:alexis.grenier2000@gmail.com).
 
 ## License
 
