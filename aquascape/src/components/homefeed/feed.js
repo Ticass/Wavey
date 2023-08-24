@@ -8,7 +8,6 @@ import urls from "../../constants/urls";
 const Feed = () => {
     const [waves, setWaves] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const socket = new WebSocket('ws://localhost:9000');
 
 
     const fetchWaves = async () => {
