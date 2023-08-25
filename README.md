@@ -30,7 +30,6 @@ A social media platform built using the Lapis framework, Express, and React, wit
 | Friend requests | ❌       |
 | Comment Reply  | ❌       |
 
-Wavey offers a unique social experience, allowing you to stay connected with friends and experience real-time interactions.
 
 ## Contact
 
