@@ -55,9 +55,9 @@ const Feed = () => {
                     <Spinner size="xl" />
                 ) : (
                     <SimpleGrid columns={{ base: 1 }} spacing={4}>
-                        {Array.isArray(waves) && waves.map((wave, index) => (
+                        {Array.isArray(waves) && waves.map((wave) => (
                             <Post
-                                key={index}
+                                key={wave.id}
                                 userId={wave.user_id}
                                 first_name={wave.first_name}
                                 user_photo={wave.user_photo}

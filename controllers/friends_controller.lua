@@ -1,6 +1,7 @@
 local Friend = require("models.friends")
 local FriendRequest = require("models.friend_request")
 local User = require("models.user")
+local Notifier = require("notifier")
 
 local FriendController = {}
 
@@ -10,7 +11,7 @@ function FriendController:AddFriend()
     local friend_id = params.friend_id
 
     Friend:AddFriend(user_id, friend_id)
-
+    Notifier.notify("Friend Status Changed")
     return {json = {message = "Friend added with Success"}}
 end
 
@@ -21,7 +22,7 @@ function FriendController:Unfriend()
     local friend_id = params.friend_id
 
     Friend:Unfriend(user_id, friend_id)
-
+    Notifier.notify("Friend Status Changed")
     return {json = {message = "Friend added with Success"}}
 end
 
@@ -77,6 +78,8 @@ function FriendController:SendFriendRequest()
         Accepted = nil,
     })
 
+    Notifier.notify("Friend Request Sent")
+
     return {json = {request = request}}
 
 end
@@ -105,6 +108,7 @@ function FriendController:AcceptFriendRequest()
     if not request then return end
 
     FriendRequest:AcceptRequest(request.id)
+    Notifier.notify("Friend Request Sent")
     return {json = {message = "Accepted Friend Request"}}
 
 end
@@ -118,6 +122,7 @@ function FriendController:DenyFriendRequest()
     if not request then return end
 
     FriendRequest:DenyRequest(request.id)
+    Notifier.notify("Friend Request Sent")
     return {json = {message = "Denied Friend Request"}}
 end
 

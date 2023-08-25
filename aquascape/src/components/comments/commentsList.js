@@ -6,6 +6,7 @@ import NewComment from "./newComment";
 import urls from "../../constants/urls";
 import CommentReply from "./commentReply";
 import NewReply from "./newReply";
+import services from "../../constants/services";
 const CommentsList = ({ waveId }) => {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -13,7 +14,7 @@ const CommentsList = ({ waveId }) => {
     const [reply, setReply] = useState('');
 
     const fetchComments = (waveId) => {
-        axios.get(`${urls.apiNgrok}/waves/comments`, { params: { wave_id: parseInt(waveId) } })
+        return axios.get(`${urls.apiNgrok}/waves/comments`, { params: { wave_id: parseInt(waveId) } })
             .then((response) => {
                 setComments(response.data.comments);
                 setLoading(false);
@@ -28,6 +29,8 @@ const CommentsList = ({ waveId }) => {
 
     useEffect(() => {
         fetchComments(waveId);
+
+        services.onWebSocketMessage("New Reply Received", () => fetchComments(waveId))
     }, [waveId]);
 
     if (loading) {
@@ -66,7 +69,7 @@ const CommentsList = ({ waveId }) => {
         <VStack align="start" w="100%" spacing={4} mt={4}>
             <NewComment onCommentAdded={fetchComments} waveId={waveId}></NewComment>
             {Array.isArray(comments) && comments.map((comment) => {
-                if (!comment.parent_id) {  // Only process comments without a parent_id
+                if (!comment.parent_id) {
                     return (
                         <Box
                             key={comment.id}

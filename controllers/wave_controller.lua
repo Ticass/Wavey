@@ -139,7 +139,10 @@ function WaveController:CommentWave()
         content = content,
     })
 
+
+    Notifier.notify("New Reply Received")
     return {json = {comment = comment}}
+
 
 end
 

@@ -7,6 +7,10 @@ const services = {
       console.log("WEBSOCKET EVENT: ", event);
       const incomingMessage = event.data;
       if (incomingMessage === message) {
+        if (typeof callback !== 'function') {
+          console.error('Expected a function for callback, but got:', callback);
+          return;
+        }
         return callback();
       }
     };
