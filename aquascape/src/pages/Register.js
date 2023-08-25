@@ -30,7 +30,6 @@ const RegisterPage = () => {
     profile_picture: null,
   });
 
-  console.log(formData)
 
   const onChange = ({target}) => {
     setFormData({ ...formData, [target.name]: target.value });
@@ -38,14 +37,12 @@ const RegisterPage = () => {
 
 
   const onSubmit = (e) => {
-    console.log("submitting")
     const { first_name, last_name, email, password, profile_picture } = formData;
     e.preventDefault();
 
 
     axios.post(`${urls.apiNgrok}/register?first_name=${first_name}&last_name=${last_name}&email=${email}&password=${password}&profile_picture=${profile_picture}`,)
     .then(function (response) {
-      console.log(response);
     })
     .catch(function (error) {
       console.log(error);

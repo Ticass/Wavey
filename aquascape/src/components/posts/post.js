@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import {
   Card,
   CardHeader,
@@ -27,38 +27,33 @@ import axios from "axios";
 import CommentsList from "../comments/commentsList";
 import urls from "../../constants/urls";
 import { Link } from "react-router-dom";
-// Tweet Component
-const Post = ({ photo, first_name, content, contentPhoto, userId, waveId }) => {
-  const [profilePicture, setProfilePicture] = useState(null);
-  const { getProfilePicture, currentUser } = useContext(UserContext);
+import services from "../../constants/services";
+
+
+const fetchLikes = async (waveId) => {
+  const response = await axios.get(`${urls.apiNgrok}/waves/likes`, { params: { wave_id: waveId } })
+  return response.data.count
+};
+
+// Waves Component
+const Post = ({first_name, user_photo, content, contentPhoto, userId, waveId }) => {
+  const { currentUser } = useContext(UserContext);
   const [likes, setLikes] = useState(0);
-  const [displayedLikes, setDisplayedLikes] = useState(likes);
   const [editMode, setEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
+  useEffect(() => {
+    fetchLikes(waveId).then((_likes) => setLikes(_likes))
+  }, [waveId])
 
   useEffect(() => {
-    const fetchProfilePicture = () => {
-      getProfilePicture(userId).then((response) => {
-        setProfilePicture(response);
-      });
-    };
-
-    const fetchLikes = () => {
-      axios
-        .get(`${urls.apiNgrok}/waves/likes`, { params: { wave_id: waveId } })
-        .then((response) => {
-          setLikes(response.data.count);
-        });
-    };
-
-    fetchProfilePicture();
-    fetchLikes();
-  }, [getProfilePicture, userId, waveId]);
+    services.onWebSocketMessage("New Like Received", () => fetchLikes(waveId).then((_likes) => setLikes(_likes)))
+    fetchLikes(waveId).then((_likes) => setLikes(_likes))
+  }, [waveId])
 
   const startEdit = () => {
     if (!currentUser) return;
     if (userId !== currentUser.id) return;
-    setEditMode(true);
+    return setEditMode(true);
   };
 
   const submitEdit = (nextValue) => {
@@ -90,9 +85,6 @@ const Post = ({ photo, first_name, content, contentPhoto, userId, waveId }) => {
     });
   };
 
-  useEffect(() => {
-    setDisplayedLikes(likes);
-  }, [likes]);
 
   return (
     <Box w="full" p={3} borderWidth="1px" borderRadius="md">
@@ -102,7 +94,7 @@ const Post = ({ photo, first_name, content, contentPhoto, userId, waveId }) => {
         <CardHeader>
           <Flex justify="space-between" alignItems="center">
             <Flex alignItems="center" spacing={4}>
-              <Avatar name={first_name} src={profilePicture || photo} />
+              <Avatar name={first_name} src={user_photo} />
               <Box p={3}>
                 <Link to={`/profile/${userId}`}>
                   <Heading size="sm">@{first_name}</Heading>
@@ -158,7 +150,7 @@ const Post = ({ photo, first_name, content, contentPhoto, userId, waveId }) => {
             onClick={onLike}
             leftIcon={<BiLike />}
           >
-            Like {displayedLikes}
+            Like {likes}
           </Button>
           <Button flex="1" variant="ghost" leftIcon={<BiChat />}>
             Comment

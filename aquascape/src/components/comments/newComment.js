@@ -24,7 +24,6 @@ const NewComment = ({ waveId, onCommentAdded }) => {
         setComment('');  // Clear the comment input after submitting
     };
 
-    console.log(currentUser, "CURRENT USER NEW COMMENT")
 
     return (
         currentUser &&

@@ -31,7 +31,6 @@ const Feed = () => {
     }, []);
 
     useEffect(() => {
-
         services.onWebSocketMessage("New post has been made", () => fetchWaves())
     }, []);
 
@@ -61,9 +60,11 @@ const Feed = () => {
                                 key={index}
                                 userId={wave.user_id}
                                 first_name={wave.first_name}
+                                user_photo={wave.user_photo}
                                 content={wave.content}
                                 contentPhoto={wave.content_photo}
                                 waveId={wave.id}
+                                likes={wave.likes}
                             />
                         ))}
                     </SimpleGrid>

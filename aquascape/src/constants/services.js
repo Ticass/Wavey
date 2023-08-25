@@ -1,21 +1,20 @@
 const services = {
+  onWebSocketMessage: (message, callback) => {
+    // Set up WebSocket connection
+    const ws = new WebSocket("ws://localhost:3001");
 
-        onWebSocketMessage: (message, callback) => {
-             // Set up WebSocket connection
-        const ws = new WebSocket('ws://localhost:3001');
+    ws.onmessage = (event) => {
+      console.log("WEBSOCKET EVENT: ", event);
+      const incomingMessage = event.data;
+      if (incomingMessage === message) {
+        return callback();
+      }
+    };
 
-        ws.onmessage = (event) => {
-            console.log("WEBSOCKET EVENT: ", event)
-            const incomingMessage = event.data
-            if (incomingMessage === message) {
-                callback();
-            }
-        };
+    return () => {
+      ws.close();
+    };
+  },
+};
 
-        return () => {
-            ws.close();
-        };
-    }
-}
-
-export default services
+export default services;

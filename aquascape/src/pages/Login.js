@@ -38,7 +38,6 @@ const Login = () => {
     })
       .then(response => response.json())
       .then(responseData => {
-        console.log(responseData, "Data")
         if (responseData.text.includes('User stored in session')) {
           navigate('/waves');
         } else {

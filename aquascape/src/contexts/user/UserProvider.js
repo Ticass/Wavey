@@ -11,7 +11,6 @@ const UserProvider = ({ children }) => {
     const getCurrentUser = async () => {
       try {
           const response = await axios.get(`${urls.apiNgrok}/current`, {withCredentials: true});
-          console.log(response.data.user, "Response");
           return response.data.user;
       } catch (error) {
           console.error("Error fetching current user:", error);

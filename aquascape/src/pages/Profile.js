@@ -73,7 +73,6 @@ const ProfilePage = () => {
         { withCredentials: true }
       )
       .then((response) => {
-        console.log(response, "Friend removed");
       });
   };
 

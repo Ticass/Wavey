@@ -16,7 +16,6 @@ const CommentsList = ({ waveId }) => {
         axios.get(`${urls.apiNgrok}/waves/comments`, { params: { wave_id: parseInt(waveId) } })
             .then((response) => {
                 setComments(response.data.comments);
-                console.log(response.data.comments)
                 setLoading(false);
             })
             .catch((err) => {
@@ -56,7 +55,6 @@ const CommentsList = ({ waveId }) => {
             .then((response) => {
                 if (response.data) {
                     fetchComments(waveId)
-                    console.log("Comment sent")
                 }
             });
 
