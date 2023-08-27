@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import {
   Card,
@@ -29,26 +30,40 @@ import urls from "../../constants/urls";
 import { Link } from "react-router-dom";
 import services from "../../constants/services";
 
-
-const fetchLikes = async (waveId) => {
-  const response = await axios.get(`${urls.apiNgrok}/waves/likes`, { params: { wave_id: waveId } })
-  return response.data.count
-};
-
 // Waves Component
-const Post = ({first_name, user_photo, content, contentPhoto, userId, waveId }) => {
+const Post = ({
+  first_name,
+  user_photo,
+  content,
+  contentPhoto,
+  userId,
+  waveId,
+}) => {
   const { currentUser } = useContext(UserContext);
   const [likes, setLikes] = useState(0);
   const [editMode, setEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
-  useEffect(() => {
-    fetchLikes(waveId).then((_likes) => setLikes(_likes))
-  }, [waveId])
+
+  const fetchLikes = async (waveId) => {
+    return await axios.get(`${urls.apiNgrok}/waves/likes`, {
+      withCredentials: true,
+      params: { wave_id: waveId },
+    });
+  };
+
+  const fetchData = async () => {
+    if (!waveId) return;
+    const _likes = await fetchLikes(waveId);
+    setLikes(_likes.data.count);
+  };
 
   useEffect(() => {
-    services.onWebSocketMessage("New Like Received", () => fetchLikes(waveId).then((_likes) => setLikes(_likes)))
-    fetchLikes(waveId).then((_likes) => setLikes(_likes))
-  }, [waveId])
+    fetchData();
+  }, [waveId]);
+
+  useEffect(() => {
+    services.onWebSocketMessage("New Like Received", () => fetchData());
+  }, []);
 
   const startEdit = () => {
     if (!currentUser) return;
@@ -56,19 +71,21 @@ const Post = ({first_name, user_photo, content, contentPhoto, userId, waveId }) 
     return setEditMode(true);
   };
 
-  const submitEdit = (nextValue) => {
-    axios.post(`${urls.apiNgrok}/wave/edit`, false, {
-      withCredentials: true,
-      params: { wave_id: waveId, user_id: userId, content: nextValue },
-    })
-    .then(() => {
-      setEditMode(false);
-      setEditedContent(nextValue);
-    });
+  const submitEdit = async (nextValue) => {
+    await axios
+      .post(`${urls.apiNgrok}/wave/edit`, false, {
+        withCredentials: true,
+        params: { wave_id: waveId, user_id: userId, content: nextValue },
+      })
+      .then(() => {
+        setEditMode(false);
+        setEditedContent(nextValue);
+        fetchData();
+      });
   };
 
-  const onLike = () => {
-    axios
+  const onLike = async () => {
+    await axios
       .post(`${urls.apiNgrok}/wave/like`, false, {
         withCredentials: true,
         params: { wave_id: waveId },
@@ -82,9 +99,8 @@ const Post = ({first_name, user_photo, content, contentPhoto, userId, waveId }) 
     axios.post(`${urls.apiNgrok}/wave/delete`, false, {
       withCredentials: true,
       params: { wave_id: waveId, user_id: userId },
-    });
+    }).then(() => fetchData())
   };
-
 
   return (
     <Box w="full" p={3} borderWidth="1px" borderRadius="md">
@@ -101,36 +117,38 @@ const Post = ({first_name, user_photo, content, contentPhoto, userId, waveId }) 
                 </Link>
               </Box>
             </Flex>
-            {
-                userId === currentUser?.id && (<Menu>
-                  <MenuButton
-                    as={IconButton}
-                    variant="ghost"
-                    colorScheme="gray"
-                    aria-label="Options"
-                    icon={<BsThreeDotsVertical />}
-                  />
-                  <MenuList>
+            {userId === currentUser?.id && (
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  variant="ghost"
+                  colorScheme="gray"
+                  aria-label="Options"
+                  icon={<BsThreeDotsVertical />}
+                />
+                <MenuList>
                   <MenuItem onClick={startEdit}>Edit Post</MenuItem>
                   <MenuItem onClick={deletePost}>Delete Post</MenuItem>
-                  </MenuList>
-                </Menu>)
-              }
+                </MenuList>
+              </Menu>
+            )}
           </Flex>
         </CardHeader>
         <CardBody>
-          {
-            userId === currentUser?.id ? (    <Editable
+          {userId === currentUser?.id ? (
+            <Editable
               defaultValue={editedContent}
               isEditing={editMode}
               onSubmit={submitEdit}
               onCancel={() => setEditMode(false)}
-              color='black'
+              color="black"
             >
               <EditablePreview />
               <EditableTextarea color="black"></EditableTextarea>
-              </Editable>) : (<Text>{content}</Text>)
-          }
+            </Editable>
+          ) : (
+            <Text>{content}</Text>
+          )}
         </CardBody>
         {contentPhoto && (
           <Image objectFit="cover" src={contentPhoto} alt="Chakra UI" />

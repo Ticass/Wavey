@@ -43,7 +43,7 @@ const FriendRequestNotification = ({ currentUser }) => {
     services.onWebSocketMessage("Friend Request Sent", () =>
       fetchData()
     );
-  });
+  }, []);
 
   const acceptRequest = async (id) => {
     if (!currentUser) return;

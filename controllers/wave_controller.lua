@@ -56,7 +56,7 @@ function WaveController:DeleteWave()
     local wave = Wave:find({id = wave_id, user_id = user_id})
 
     if not wave then return {json = {error = {"no wave found"}}} end
-
+    Notifier.notify("New post has been made")
     wave:update({deleted = true})
 end
 
