@@ -84,7 +84,7 @@ const CommentsList = ({ waveId }) => {
                                 first_name={comment.first_name}
                                 profile_picture={comment.profile_picture}
                                 content={comment.content}
-                                userId={comment.id}
+                                userId={comment.user_id}
                             />
                             {Array.isArray(filteredReplies()) && filteredReplies().filter(reply => reply.parent_id === comment.id).map(reply => (
                                 <CommentReply
