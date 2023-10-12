@@ -16,9 +16,8 @@ A social media platform built using the Lapis framework, Express (for the websoc
 - **Comment Replies**: Share your thoughts about a certain comment.
 - **Liking / Unliking**: Show appreciation for posts through likes.
 - **User Profiles**: Customize your profile and let others know about you.
-- **Friend Requests**: Connect with others by sending and accepting friend requests. -- Currently under repair, pretty buggy but still "Woking" 
+- **Friend Requests**: Connect with others by sending and accepting friend requests.
 - **Friends**: Build your social circle; upcoming integration with the feed.
-- **Websocket**: Experience real-time communication between you and other users, meaning you'll never miss out on a new post !.
 
 ## Implemented Features with WebSockets
 
