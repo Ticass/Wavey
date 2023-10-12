@@ -27,7 +27,7 @@ A social media platform built using the Lapis framework, Express (for the websoc
 | Posting            | ✅       |
 | Commenting  |  ✅       |
 | Likes     | ✅        |
-| Friend requests | ❌       |
+| Friend requests | ✅       |
 | Comment Reply  | ✅      |
 
 
