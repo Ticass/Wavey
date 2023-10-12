@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@chakra-ui/icons": "^2.1.0",
     "@chakra-ui/react": "^2.8.0",
     "@chakra-ui/system": "^2.6.0",
@@ -23,7 +24,8 @@
     "react-router-dom": "^6.14.2",
     "react-scripts": "5.0.1",
     "typescript": "^5.1.6",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "ws": "^8.13.0"
   },
   "scripts": {
     "start": "react-scripts start",

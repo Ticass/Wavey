@@ -56,11 +56,11 @@ function WaveController:DeleteWave()
     local wave = Wave:find({id = wave_id, user_id = user_id})
 
     if not wave then return {json = {error = {"no wave found"}}} end
-
+    Notifier.notify("New post has been made")
     wave:update({deleted = true})
 end
 
-function WaveController:SurfWave()
+function WaveController:ShareWave()
 
 end
 
@@ -68,16 +68,30 @@ end
 function WaveController:GetAllWaves()
     local params = self.params
     local user_id = params.user_id
+    local waves = nil
     if user_id then
-        local waves = Wave:select("where user_id = ? and deleted = ? order by id desc", user_id, false)
-        return {json = {waves = waves}}
+        waves = Wave:select("where user_id = ? and deleted = ? order by id desc", user_id, false)
     end
 
     if not user_id then
-        local waves = Wave:select("where deleted = ? order by id desc", false)
-    return {json = {waves = waves}}
+        waves = Wave:select("where deleted = ? order by id desc", false)
     end
 
+    local data = {}
+    if waves == nil then return end
+
+    for _,v in pairs(waves) do
+        table.insert(data, {
+            user_id = v.user_id,
+            content_photo = v.content_photo,
+            content = v.content,
+            likes = v.likes,
+            user_photo = User:find(v.user_id).profile_picture,
+            first_name = User:find(v.user_id).first_name,
+            id = v.id,
+        })
+    end
+    return {json = {waves = data}}
 end
 
 --Takes a wave ID from params and a user ID from the session
@@ -106,6 +120,7 @@ function WaveController:LikeWave()
         })
     end
 
+    Notifier.notify("New Like Received")
     wave:update({likes = Like:GetLikesByWaveId(wave_id)})
     return {json = {count = Like:GetLikesByWaveId(wave_id)}}
 end
@@ -124,7 +139,10 @@ function WaveController:CommentWave()
         content = content,
     })
 
+
+    Notifier.notify("New Reply Received")
     return {json = {comment = comment}}
+
 
 end
 

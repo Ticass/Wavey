@@ -32,14 +32,16 @@ const MiniFeed = ({userId}) => {
                     <Spinner size="xl" />
                 ) : (
                     <SimpleGrid columns={{ base: 1 }} spacing={4}>
-                        {Array.isArray(waves) && waves.map((wave, index) => (
+                        {Array.isArray(waves) && waves.map((wave) => (
                             <Post
-                                key={index}
-                                userId={wave.user_id}
-                                first_name={wave.first_name}
-                                content={wave.content}
-                                contentPhoto={wave.content_photo}
-                                waveId={wave.id}
+                            key={wave.id}
+                            userId={wave.user_id}
+                            first_name={wave.first_name}
+                            user_photo={wave.user_photo}
+                            content={wave.content}
+                            contentPhoto={wave.content_photo}
+                            waveId={wave.id}
+                            likes={wave.likes}
                             />
                         ))}
                     </SimpleGrid>

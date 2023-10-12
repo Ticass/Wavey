@@ -1,5 +1,6 @@
 local Comment = require("models.comments")
 local User = require("models.user")
+local Notifier = require("notifier")
 local CommentController = {}
 
 function CommentController:ShowByWave()
@@ -49,6 +50,7 @@ function CommentController:Reply()
     local reply = Comment:create({
         wave_id = wave_id, user_id = current_user.id, content = content, parent_id = parent_comment.id
     })
+    Notifier.notify("New Reply Received")
     return {json = {reply = reply}}
 end
 
@@ -61,7 +63,7 @@ function CommentController:EditReply()
     if not current_user and not reply then return {json = {message = "Error no reply or current_user found"}} end
 
     local new_reply = reply:update({content = content})
-
+    Notifier.notify("New Reply Received")
     return {json = {reply = new_reply}}
 
 end
@@ -74,7 +76,7 @@ function CommentController:DeleteReply()
     if not current_user and not reply then return {json = {message = "Error no reply or current_user found"}} end
 
     reply:delete()
-
+    Notifier.notify("New Reply Received")
     return {json = {Message = 'Deleted reply successfully'}}
 end
 

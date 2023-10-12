@@ -1,17 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, {  useContext } from "react";
 import { Flex, Avatar, Input } from "@chakra-ui/react";
 import UserContext from "../../contexts/user/UserContext";
 
 const NewReply = ({ commentId, handleReply, reply, setReply}) => {
     const { currentUser } = useContext(UserContext);
-    // const [currentUser, setCurrentUser] = useState(null)
-
-
-    // useEffect(() => {
-    //     getCurrentUser().then((response) => {
-    //         setCurrentUser(response)
-    //     })
-    // }, [getCurrentUser])
 
     return (
         <Flex align="center" mt={2} p={2} border="1px solid #E9EBED" borderRadius="12px" bg="#F2F3F5" maxW='100%'>

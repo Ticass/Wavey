@@ -1,6 +1,7 @@
 local Friend = require("models.friends")
 local FriendRequest = require("models.friend_request")
 local User = require("models.user")
+local Notifier = require("notifier")
 
 local FriendController = {}
 
@@ -10,7 +11,7 @@ function FriendController:AddFriend()
     local friend_id = params.friend_id
 
     Friend:AddFriend(user_id, friend_id)
-
+    Notifier.notify("Friend Request Sent")
     return {json = {message = "Friend added with Success"}}
 end
 
@@ -21,7 +22,7 @@ function FriendController:Unfriend()
     local friend_id = params.friend_id
 
     Friend:Unfriend(user_id, friend_id)
-
+    Notifier.notify("Friend Request Sent")
     return {json = {message = "Friend added with Success"}}
 end
 
@@ -37,8 +38,10 @@ function FriendController:DisplayFriends()
         local friend = User:find(v.friend_id)
         local status = nil
 
-        if v.unfriended then status = "Add Friend" end
-        if not v.unfriended then status = "Unfriend" end
+        local unfriended = Friend:IsUnFriended(friend_id, user_id)
+        if unfriended == "same" then status = "Not Available" end
+        if unfriended == true then status = "Add Friend" end
+        if unfriended == false then status = "Unfriend" end
         if not friend then return end
         table.insert(data, {user_id = user_id, friend_id = v.friend_id, profile_picture = friend.profile_picture, name = friend.first_name, status = status })
     end
@@ -53,7 +56,8 @@ function FriendController:Status()
 
     local unfriended = Friend:IsUnFriended(friend_id, user_id)
     if unfriended == "same" then return {json = {status = "Not Available"}} end
-    if unfriended == true then return {json = {status = "Add Friend"}} elseif unfriended == false then return {json = {status = "Unfriend"}} end
+    if unfriended == true then return {json = {status = "Add Friend"}} end
+    if unfriended == false then return {json = {status = "Unfriend"}} end
 end
 
 --Friend Requests
@@ -76,6 +80,8 @@ function FriendController:SendFriendRequest()
         friend_id = tonumber(friend_id),
         Accepted = nil,
     })
+
+    Notifier.notify("Friend Request Sent")
 
     return {json = {request = request}}
 
@@ -105,7 +111,8 @@ function FriendController:AcceptFriendRequest()
     if not request then return end
 
     FriendRequest:AcceptRequest(request.id)
-    return {json = {message = "Accepted Friend Request"}}
+    Notifier.notify("Friend Request Sent")
+    return {json = {request = request}}
 
 end
 
@@ -118,7 +125,9 @@ function FriendController:DenyFriendRequest()
     if not request then return end
 
     FriendRequest:DenyRequest(request.id)
-    return {json = {message = "Denied Friend Request"}}
+    Notifier.notify("Friend Request Sent")
+    return {json = {request = request}}
+
 end
 
 

@@ -4,7 +4,7 @@ import Post from "../posts/post";
 import axios from "axios";
 import NewPost from "../posts/NewPost";
 import urls from "../../constants/urls";
-// import WebSocket from "websocket"; // Import the WebSocket library
+import services from "../../constants/services";
 
 const Feed = () => {
     const [waves, setWaves] = useState([]);
@@ -31,20 +31,7 @@ const Feed = () => {
     }, []);
 
     useEffect(() => {
-
-        // Set up WebSocket connection
-        const ws = new WebSocket('ws://localhost:3001');
-
-        ws.onmessage = (event) => {
-            const message = event
-            if (message) {
-                fetchWaves();
-            }
-        };
-
-        return () => {
-            ws.close();
-        };
+        services.onWebSocketMessage("New post has been made", () => fetchWaves())
     }, []);
 
 
@@ -68,14 +55,16 @@ const Feed = () => {
                     <Spinner size="xl" />
                 ) : (
                     <SimpleGrid columns={{ base: 1 }} spacing={4}>
-                        {Array.isArray(waves) && waves.map((wave, index) => (
+                        {Array.isArray(waves) && waves.map((wave) => (
                             <Post
-                                key={index}
+                                key={wave.id}
                                 userId={wave.user_id}
                                 first_name={wave.first_name}
+                                user_photo={wave.user_photo}
                                 content={wave.content}
                                 contentPhoto={wave.content_photo}
                                 waveId={wave.id}
+                                likes={wave.likes}
                             />
                         ))}
                     </SimpleGrid>

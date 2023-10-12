@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable eqeqeq */
 import {
   Box,
@@ -19,45 +20,57 @@ import UserContext from "../contexts/user/UserContext";
 import MiniFeed from "../components/homefeed/miniFeed";
 import axios from "axios";
 import urls from "../constants/urls";
+import services from "../constants/services";
 
 const ProfilePage = () => {
   const { id } = useParams();
   const { getUserById, currentUser } = useContext(UserContext);
   const [user, setUser] = useState(null);
   const [friends, setFriends] = useState([]);
-  const [status, setStatus] = useState("Add Friend");
+  const [status, setStatus] = useState("");
 
-  const fetchFriends = (id) => {
-    return axios.get(`${urls.apiNgrok}/user/${id}/friends`, {
+  const fetchFriends = async (id) => {
+    return await axios.get(`${urls.apiNgrok}/user/${id}/friends`, {
       withCredentials: true,
     });
   };
 
-  const sendFriendRequest = (friend_id) => {
-    return axios.post(`${urls.apiNgrok}/user/${friend_id}/request`, false, {
+  const fetchStatus = async (user_id, friend_id) => {
+    return await axios.get(`${urls.apiNgrok}/friends/${user_id}/${friend_id}/status`, {withCredentials: true}, {
       withCredentials: true,
     });
   };
 
-  const findStatus = (friends, friend_id) => {
-    if (!Array.isArray(friends)) return;
-    const friend = friends?.find((friend) => friend.user_id == friend_id);
-    if (!friend) return;
-    setStatus(friend?.status);
+  const sendFriendRequest = async (friend_id) => {
+    return await axios.post(`${urls.apiNgrok}/user/${friend_id}/request`, false, {
+      withCredentials: true,
+    });
+  };
+
+  const fetchData = async () => {
+    if (!currentUser) return;
+    const userData = await getUserById(id);
+    const friendResponse = await fetchFriends(id);
+    const fetchedFriends = friendResponse.data.friends;
+    const friendStatus = await fetchStatus(currentUser?.id, id)
+    const fetchedStatus = friendStatus.data.status;
+    console.log(fetchedStatus)
+    console.log(fetchedFriends, "Fetched Friends")
+    console.log()
+
+    setUser(userData);
+    setFriends(fetchedFriends)
+    setStatus(fetchedStatus)
   };
 
   useEffect(() => {
-    getUserById(id).then((response) => {
-      setUser(response);
-    });
-    fetchFriends(id).then((response) => {
-      setFriends(response.data.friends);
-    });
-  }, [getUserById, id]);
+    fetchData(); // Initial fetch
+  }, [id, getUserById]); // Only re-run if 'id' changes
 
   useEffect(() => {
-    findStatus(friends, id);
-  }, [friends, id]);
+    services.onWebSocketMessage("Friend Request Sent", () => fetchData());
+  });
+
 
   const userCheck = () => {
     if (!currentUser) return;
@@ -72,9 +85,7 @@ const ProfilePage = () => {
         false,
         { withCredentials: true }
       )
-      .then((response) => {
-        console.log(response, "Friend removed");
-      });
+      .then( () => fetchData());
   };
 
   const onFriendAdd = async () => {
@@ -84,14 +95,12 @@ const ProfilePage = () => {
     }
 
     if (status === "Unfriend") {
-      unfriend();
-      setStatus("Add Friend");
+      await unfriend();
     }
-    fetchFriends(id).then((response) => {
-      findStatus();
-      return setFriends(response);
-    });
+    fetchData()
   };
+
+
 
   return (
     <Flex direction="column" overflowY="auto" maxW="1100px" m="0 auto" p="20px">

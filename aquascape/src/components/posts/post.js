@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import {
   Card,
   CardHeader,
@@ -27,53 +28,64 @@ import axios from "axios";
 import CommentsList from "../comments/commentsList";
 import urls from "../../constants/urls";
 import { Link } from "react-router-dom";
-// Tweet Component
-const Post = ({ photo, first_name, content, contentPhoto, userId, waveId }) => {
-  const [profilePicture, setProfilePicture] = useState(null);
-  const { getProfilePicture, currentUser } = useContext(UserContext);
+import services from "../../constants/services";
+
+// Waves Component
+const Post = ({
+  first_name,
+  user_photo,
+  content,
+  contentPhoto,
+  userId,
+  waveId,
+}) => {
+  const { currentUser } = useContext(UserContext);
   const [likes, setLikes] = useState(0);
-  const [displayedLikes, setDisplayedLikes] = useState(likes);
   const [editMode, setEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
 
+  const fetchLikes = async (waveId) => {
+    return await axios.get(`${urls.apiNgrok}/waves/likes`, {
+      withCredentials: true,
+      params: { wave_id: waveId },
+    });
+  };
+
+  const fetchData = async () => {
+    if (!waveId) return;
+    const _likes = await fetchLikes(waveId);
+    setLikes(_likes.data.count);
+  };
+
   useEffect(() => {
-    const fetchProfilePicture = () => {
-      getProfilePicture(userId).then((response) => {
-        setProfilePicture(response);
-      });
-    };
+    fetchData();
+  }, [waveId]);
 
-    const fetchLikes = () => {
-      axios
-        .get(`${urls.apiNgrok}/waves/likes`, { params: { wave_id: waveId } })
-        .then((response) => {
-          setLikes(response.data.count);
-        });
-    };
-
-    fetchProfilePicture();
-    fetchLikes();
-  }, [getProfilePicture, userId, waveId]);
+  useEffect(() => {
+    services.onWebSocketMessage("New Like Received", () => fetchData());
+  }, []);
 
   const startEdit = () => {
     if (!currentUser) return;
     if (userId !== currentUser.id) return;
-    setEditMode(true);
+    return setEditMode(true);
   };
 
-  const submitEdit = (nextValue) => {
-    axios.post(`${urls.apiNgrok}/wave/edit`, false, {
-      withCredentials: true,
-      params: { wave_id: waveId, user_id: userId, content: nextValue },
-    })
-    .then(() => {
-      setEditMode(false);
-      setEditedContent(nextValue);
-    });
+  const submitEdit = async (nextValue) => {
+    await axios
+      .post(`${urls.apiNgrok}/wave/edit`, false, {
+        withCredentials: true,
+        params: { wave_id: waveId, user_id: userId, content: nextValue },
+      })
+      .then(() => {
+        setEditMode(false);
+        setEditedContent(nextValue);
+        fetchData();
+      });
   };
 
-  const onLike = () => {
-    axios
+  const onLike = async () => {
+    await axios
       .post(`${urls.apiNgrok}/wave/like`, false, {
         withCredentials: true,
         params: { wave_id: waveId },
@@ -87,12 +99,8 @@ const Post = ({ photo, first_name, content, contentPhoto, userId, waveId }) => {
     axios.post(`${urls.apiNgrok}/wave/delete`, false, {
       withCredentials: true,
       params: { wave_id: waveId, user_id: userId },
-    });
+    }).then(() => fetchData())
   };
-
-  useEffect(() => {
-    setDisplayedLikes(likes);
-  }, [likes]);
 
   return (
     <Box w="full" p={3} borderWidth="1px" borderRadius="md">
@@ -102,43 +110,45 @@ const Post = ({ photo, first_name, content, contentPhoto, userId, waveId }) => {
         <CardHeader>
           <Flex justify="space-between" alignItems="center">
             <Flex alignItems="center" spacing={4}>
-              <Avatar name={first_name} src={profilePicture || photo} />
+              <Avatar name={first_name} src={user_photo} />
               <Box p={3}>
                 <Link to={`/profile/${userId}`}>
                   <Heading size="sm">@{first_name}</Heading>
                 </Link>
               </Box>
             </Flex>
-            {
-                userId === currentUser?.id && (<Menu>
-                  <MenuButton
-                    as={IconButton}
-                    variant="ghost"
-                    colorScheme="gray"
-                    aria-label="Options"
-                    icon={<BsThreeDotsVertical />}
-                  />
-                  <MenuList>
+            {userId === currentUser?.id && (
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  variant="ghost"
+                  colorScheme="gray"
+                  aria-label="Options"
+                  icon={<BsThreeDotsVertical />}
+                />
+                <MenuList>
                   <MenuItem onClick={startEdit}>Edit Post</MenuItem>
                   <MenuItem onClick={deletePost}>Delete Post</MenuItem>
-                  </MenuList>
-                </Menu>)
-              }
+                </MenuList>
+              </Menu>
+            )}
           </Flex>
         </CardHeader>
         <CardBody>
-          {
-            userId === currentUser?.id ? (    <Editable
+          {userId === currentUser?.id ? (
+            <Editable
               defaultValue={editedContent}
               isEditing={editMode}
               onSubmit={submitEdit}
               onCancel={() => setEditMode(false)}
-              color='black'
+              color="black"
             >
               <EditablePreview />
               <EditableTextarea color="black"></EditableTextarea>
-              </Editable>) : (<Text>{content}</Text>)
-          }
+            </Editable>
+          ) : (
+            <Text>{content}</Text>
+          )}
         </CardBody>
         {contentPhoto && (
           <Image objectFit="cover" src={contentPhoto} alt="Chakra UI" />
@@ -158,7 +168,7 @@ const Post = ({ photo, first_name, content, contentPhoto, userId, waveId }) => {
             onClick={onLike}
             leftIcon={<BiLike />}
           >
-            Like {displayedLikes}
+            Like {likes}
           </Button>
           <Button flex="1" variant="ghost" leftIcon={<BiChat />}>
             Comment
