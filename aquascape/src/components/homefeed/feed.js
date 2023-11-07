@@ -5,6 +5,7 @@ import axios from "axios";
 import NewPost from "../posts/NewPost";
 import urls from "../../constants/urls";
 import services from "../../constants/services";
+import SharedPost from "../posts/SharedPost";
 
 const Feed = () => {
     const [waves, setWaves] = useState([]);
@@ -58,6 +59,9 @@ const Feed = () => {
                         {Array.isArray(waves) && waves.map((wave) => (
                             <Post
                                 key={wave.id}
+                                originalPost={wave}
+                                sharedContent={wave.content}
+                                sharedUser={wave}
                                 userId={wave.user_id}
                                 first_name={wave.first_name}
                                 user_photo={wave.user_photo}
@@ -65,6 +69,7 @@ const Feed = () => {
                                 contentPhoto={wave.content_photo}
                                 waveId={wave.id}
                                 likes={wave.likes}
+                                minified={false}
                             />
                         ))}
                     </SimpleGrid>
