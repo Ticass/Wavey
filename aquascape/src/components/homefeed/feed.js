@@ -4,8 +4,8 @@ import Post from "../posts/post";
 import axios from "axios";
 import NewPost from "../posts/NewPost";
 import urls from "../../constants/urls";
-import services from "../../constants/services";
 import SharedPost from "../posts/SharedPost";
+import { socket } from "../../socket";
 
 const Feed = () => {
     const [waves, setWaves] = useState([]);
@@ -32,11 +32,12 @@ const Feed = () => {
     }, []);
 
     useEffect(() => {
-        services.onWebSocketMessage("New post has been made", () => fetchWaves())
+        socket.on("New post has been made", fetchWaves)
     }, []);
 
 
     return (
+
         <Box
             width={{ base: "90%", md: "70%", lg: "60%" }}
             m="0 auto"

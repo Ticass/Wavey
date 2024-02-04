@@ -30,6 +30,7 @@ import urls from "../../constants/urls";
 import { Link } from "react-router-dom";
 import services from "../../constants/services";
 import Post from "./post";
+import { socket } from "../../socket";
 
 // Waves Component
 const SharedPost = ({
@@ -67,7 +68,7 @@ const SharedPost = ({
   }, [waveId]);
 
   useEffect(() => {
-    services.onWebSocketMessage("New Like Received", () => fetchData());
+    socket.on("New Like Received", fetchData);
   }, []);
 
   const startEdit = () => {

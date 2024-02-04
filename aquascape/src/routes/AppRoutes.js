@@ -8,6 +8,9 @@ import {
     Routes,
     Route,
   } from "react-router-dom";
+import { socket } from "../socket";
+
+  socket.connect();
 
 
   const AppRoutes = () => {

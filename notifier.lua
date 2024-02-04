@@ -1,9 +1,10 @@
+local ltn12 = require("ltn12")
 local http = require("socket.http")
 local cjson = require("cjson") -- Load the cjson library
 local Notifier = {}
 
 function Notifier.notify(message)
-    local url = "http://localhost:3001/notify" -- Change this to the correct URL
+    local url = "http://localhost:3001/notify"
 
     local data = {
         message = message

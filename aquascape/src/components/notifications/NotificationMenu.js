@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import services from "../../constants/services";
 import {
   HStack,
   IconButton,
@@ -18,6 +17,7 @@ import {
 import { FiBell, FiUserPlus, FiX } from "react-icons/fi";
 import axios from "axios";
 import urls from "../../constants/urls";
+import { socket } from "../../socket";
 
 const FriendRequestNotification = ({ currentUser }) => {
   const [requests, setRequests] = useState([]);
@@ -40,9 +40,7 @@ const FriendRequestNotification = ({ currentUser }) => {
   }, [currentUser]);
 
   useEffect(() => {
-    services.onWebSocketMessage("Friend Request Sent", () =>
-      fetchData()
-    );
+    socket.on("Friend Request Sent", fetchData);
   }, []);
 
   const acceptRequest = async (id) => {

@@ -29,6 +29,7 @@ import CommentsList from "../comments/commentsList";
 import urls from "../../constants/urls";
 import { Link } from "react-router-dom";
 import services from "../../constants/services";
+import { socket } from "../../socket";
 
 // Waves Component
 const Post = ({
@@ -63,7 +64,7 @@ const Post = ({
   }, [waveId]);
 
   useEffect(() => {
-    services.onWebSocketMessage("New Like Received", () => fetchData());
+   socket.on("New Like Received", fetchData);
   }, []);
 
   const startEdit = () => {
