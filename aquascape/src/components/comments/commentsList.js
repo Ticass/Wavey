@@ -6,14 +6,14 @@ import NewComment from "./newComment";
 import urls from "../../constants/urls";
 import CommentReply from "./commentReply";
 import NewReply from "./newReply";
-import services from "../../constants/services";
+import { socket } from "../../socket";
 const CommentsList = ({ waveId }) => {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [reply, setReply] = useState('');
 
-    const fetchComments = (waveId) => {
+    const fetchComments = () => {
         return axios.get(`${urls.apiNgrok}/waves/comments`, { params: { wave_id: parseInt(waveId) } })
             .then((response) => {
                 setComments(response.data.comments);
@@ -26,12 +26,11 @@ const CommentsList = ({ waveId }) => {
             });
     };
 
-
+    //Todo: Fix this to use the new react way
     useEffect(() => {
-        fetchComments(waveId);
-
-        services.onWebSocketMessage("New Reply Received", () => fetchComments(waveId))
-    }, [waveId]);
+        fetchComments();
+        socket.on("New Reply Received", fetchComments)
+    }, []);
 
     if (loading) {
         return <Text>Loading comments...</Text>;
@@ -57,7 +56,7 @@ const CommentsList = ({ waveId }) => {
         axios.post(`${urls.apiNgrok}/comment/${commentId}/reply`, false, { withCredentials: true, params: { parent_id: commentId, content: reply, wave_id: waveId} })
             .then((response) => {
                 if (response.data) {
-                    fetchComments(waveId)
+                    fetchComments()
                 }
             });
 

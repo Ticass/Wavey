@@ -29,16 +29,20 @@ import CommentsList from "../comments/commentsList";
 import urls from "../../constants/urls";
 import { Link } from "react-router-dom";
 import services from "../../constants/services";
+import Post from "./post";
 import { socket } from "../../socket";
 
 // Waves Component
-const Post = ({
+const SharedPost = ({
   first_name,
   user_photo,
   content,
   contentPhoto,
   userId,
   waveId,
+  sharedContent,
+  sharedUser,
+  originalPost,
   minified,
 }) => {
   const { currentUser } = useContext(UserContext);
@@ -64,7 +68,7 @@ const Post = ({
   }, [waveId]);
 
   useEffect(() => {
-   socket.on("New Like Received", fetchData);
+    socket.on("New Like Received", fetchData);
   }, []);
 
   const startEdit = () => {
@@ -98,65 +102,43 @@ const Post = ({
   };
 
   const deletePost = () => {
-    axios.post(`${urls.apiNgrok}/wave/delete`, false, {
-      withCredentials: true,
-      params: { wave_id: waveId, user_id: userId },
-    }).then(() => fetchData())
+    axios
+      .post(`${urls.apiNgrok}/wave/delete`, false, {
+        withCredentials: true,
+        params: { wave_id: waveId, user_id: userId },
+      })
+      .then(() => fetchData());
   };
 
   return (
     <Box w="full" p={3} borderWidth="1px" borderRadius="md">
       <Card maxW="600px" m="0 auto">
-        {" "}
-        {/* Ensure card width matches NewPost */}
         <CardHeader>
           <Flex justify="space-between" alignItems="center">
             <Flex alignItems="center" spacing={4}>
-              <Avatar name={first_name} src={user_photo} />
+              <Avatar
+                name={first_name}
+                src={user_photo}
+              />
               <Box p={3}>
-                <Link to={`/profile/${userId}`}>
-                  <Heading size="sm">@{first_name}</Heading>
-                </Link>
+                <Heading size="sm">@{first_name}</Heading>
               </Box>
             </Flex>
-            {userId === currentUser?.id && (
-              <Menu>
-                <MenuButton
-                  as={IconButton}
-                  variant="ghost"
-                  colorScheme="gray"
-                  aria-label="Options"
-                  icon={<BsThreeDotsVertical />}
-                />
-                <MenuList>
-                  <MenuItem onClick={startEdit}>Edit Post</MenuItem>
-                  <MenuItem onClick={deletePost}>Delete Post</MenuItem>
-                </MenuList>
-              </Menu>
-            )}
           </Flex>
         </CardHeader>
         <CardBody>
-          {userId === currentUser?.id ? (
-            <Editable
-              defaultValue={editedContent}
-              isEditing={editMode}
-              onSubmit={submitEdit}
-              onCancel={() => setEditMode(false)}
-              color="black"
-            >
-              <EditablePreview />
-              <EditableTextarea color="black"></EditableTextarea>
-            </Editable>
-          ) : (
-            <Text>{content}</Text>
-          )}
+          <Post
+            userId={sharedUser.userId}
+            first_name={sharedUser.first_name}
+            user_photo={sharedUser.user_photo}
+            content={originalPost.content}
+            contentPhoto={originalPost.content_photo}
+            waveId={originalPost.id}
+            likes={originalPost.likes}
+            minified={minified}
+          ></Post>
         </CardBody>
-        {contentPhoto && (
-          <Image objectFit="cover" src={contentPhoto} alt="Chakra UI" />
-        )}
-        {minified ? null: (
-          <CardFooter
+        <CardFooter
           justify="space-between"
           flexWrap="wrap"
           sx={{
@@ -171,7 +153,7 @@ const Post = ({
             onClick={onLike}
             leftIcon={<BiLike />}
           >
-            Like {likes}
+            Like {originalPost.likes}
           </Button>
           <Button flex="1" variant="ghost" leftIcon={<BiChat />}>
             Comment
@@ -181,11 +163,9 @@ const Post = ({
           </Button>
           <CommentsList waveId={waveId}></CommentsList>
         </CardFooter>
-        )}
-
       </Card>
     </Box>
   );
 };
 
-export default Post;
+export default SharedPost;

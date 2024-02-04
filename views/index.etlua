@@ -51,7 +51,6 @@
     fetch('/increment')
         .then((response) => response.json())
         .then((data) => {
-            console.log(data);
             document.querySelector('#count').textContent = data.count;
         })
         .catch((error) => console.error('Error:', error));

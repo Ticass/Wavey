@@ -20,7 +20,7 @@ import UserContext from "../contexts/user/UserContext";
 import MiniFeed from "../components/homefeed/miniFeed";
 import axios from "axios";
 import urls from "../constants/urls";
-import services from "../constants/services";
+import { socket } from "../socket";
 
 const ProfilePage = () => {
   const { id } = useParams();
@@ -68,7 +68,8 @@ const ProfilePage = () => {
   }, [id, getUserById]); // Only re-run if 'id' changes
 
   useEffect(() => {
-    services.onWebSocketMessage("Friend Request Sent", () => fetchData());
+    socket.connect();
+    socket.on("Friend Request Sent", fetchData);
   });
 
 
