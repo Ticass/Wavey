@@ -2,11 +2,17 @@
 (TAKE NOTE THAT THE VERCEL LINK IS NOT WORKING WITHOUT AN ACTIVE BACKEND SERVER, I AM WORKING ON GETTING IT DEPLOYED SOON FOR DEMO PURPOSES)
 <br/>
 <br/>
-A social media platform built using the Lapis framework, Express (for the websocket), and React, backed by a PostgreSQL database. Connect with friends, share posts, and experience real-time interactions with WebSockets.
+A social media platform built using the Lapis framework (lua), Express.js and socket.io (For websocket) and React.js, backed by a PostgreSQL database. Connect with friends, share posts, and experience real-time interactions.
+
+Wavey is the proof Lua can be used for more than just video games, and makes an awesome web project to show off. 
 
 [![Wavey Demo](https://i.gyazo.com/8e2fd2b396ce0ecd76ccf1d773d3e984.gif)](https://gyazo.com/8e2fd2b396ce0ecd76ccf1d773d3e984)
 
 [![Image from Gyazo](https://i.gyazo.com/78f583099b2d2bede23d4bb1c07d6ebd.gif)](https://gyazo.com/78f583099b2d2bede23d4bb1c07d6ebd)
+
+[![Image from Gyazo](https://i.gyazo.com/0021b8d69138339c3f60b7af0451671a.gif)](https://gyazo.com/0021b8d69138339c3f60b7af0451671a)
+
+[![Image from Gyazo](https://i.gyazo.com/3fe2d42eee19cccd83d59cb8bce1e7a0.gif)](https://gyazo.com/3fe2d42eee19cccd83d59cb8bce1e7a0)
 
 ## Current Features
 
@@ -29,6 +35,11 @@ A social media platform built using the Lapis framework, Express (for the websoc
 | Friend requests | ✅       |
 | Comment Reply  | ✅      |
 
+## Running the project locally
+- start postgreSQL service
+- lapis server (in main folder)
+- yarn start (in aquascape/src)
+- node Server.js (in websocket folder)
 
 ## Contact
 
